@@ -102,7 +102,60 @@
   .card p{ color:var(--muted); font-size:0.92rem; flex-grow:1; }
   .card-link{ font-size:0.88rem; color:var(--teal); display:flex; align-items:center; gap:6px; }
   .card.soon .card-link{ color:var(--muted); }
-  .card.soon{ opacity:0.75; }
+
+  /* Smoked-glass treatment for unreleased products — visible but veiled */
+  .card.soon{
+    position:relative;
+    overflow:hidden;
+    background:
+      linear-gradient(160deg, rgba(23,34,58,0.9), rgba(18,26,43,0.96)),
+      var(--surface);
+  }
+  .card.soon .card-body{
+    position:relative;
+    z-index:0;
+  }
+  .card.soon .frost{
+    position:absolute; inset:0; z-index:1;
+    backdrop-filter: blur(9px) saturate(140%);
+    -webkit-backdrop-filter: blur(9px) saturate(140%);
+    background: rgba(18,26,43,0.42);
+  }
+  .card.soon::before{
+    /* smog haze */
+    content:'';
+    position:absolute; inset:0;
+    background: radial-gradient(120% 90% at 15% 0%, rgba(94,234,212,0.06), transparent 55%),
+                radial-gradient(100% 80% at 90% 100%, rgba(245,184,65,0.05), transparent 60%);
+    pointer-events:none;
+    z-index:0;
+  }
+  .card.soon::after{
+    /* glare sweep */
+    content:'';
+    position:absolute;
+    top:-50%; left:-60%;
+    width:40%; height:200%;
+    background:linear-gradient(75deg, transparent, rgba(231,236,245,0.14) 45%, rgba(231,236,245,0.22) 50%, rgba(231,236,245,0.14) 55%, transparent);
+    transform:rotate(8deg);
+    animation:glareSweep 6s ease-in-out infinite;
+    pointer-events:none;
+    z-index:2;
+  }
+  .card.soon .card-top{ padding-right:88px; }
+  .status.badge-float{
+    position:absolute; top:18px; right:18px; z-index:3;
+    backdrop-filter:blur(2px);
+    background:rgba(18,26,43,0.6);
+  }
+  @keyframes glareSweep{
+    0%   { left:-60%; }
+    45%  { left:130%; }
+    100% { left:130%; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .card.soon::after{ animation:none; opacity:0.5; }
+  }
 
   /* FOUNDER */
   .founder{ background:var(--surface); border:1px solid var(--line); border-radius:18px; padding:44px; display:grid; grid-template-columns:auto 1fr; gap:36px; align-items:center; }
@@ -185,14 +238,22 @@
         <a class="card-link" href="https://app.propertyiqweb.com" target="_blank" rel="noopener">app.propertyiqweb.com →</a>
       </div>
       <div class="card soon">
-        <div class="card-top"><div class="card-name">SalaryIQ</div><div class="status soon">Coming soon</div></div>
-        <p>Compensation and appraisal benchmarking — know if your salary and raise are actually fair for your role and market.</p>
-        <span class="card-link">In planning</span>
+        <div class="status soon badge-float">Coming soon</div>
+        <div class="card-body">
+          <div class="card-top"><div class="card-name">SalaryIQ</div></div>
+          <p>Compensation and appraisal benchmarking — know if your salary and raise are actually fair for your role and market.</p>
+          <span class="card-link">In planning</span>
+        </div>
+        <div class="frost"></div>
       </div>
       <div class="card soon">
-        <div class="card-top"><div class="card-name">PriceIQ</div><div class="status soon">Coming soon</div></div>
-        <p>Product pricing assessment — is this actually a fair price, or a markup dressed up as a deal.</p>
-        <span class="card-link">In planning</span>
+        <div class="status soon badge-float">Coming soon</div>
+        <div class="card-body">
+          <div class="card-top"><div class="card-name">PriceIQ</div></div>
+          <p>Product pricing assessment — is this actually a fair price, or a markup dressed up as a deal.</p>
+          <span class="card-link">In planning</span>
+        </div>
+        <div class="frost"></div>
       </div>
     </div>
   </div>
@@ -206,14 +267,22 @@
     </div>
     <div class="grid">
       <div class="card soon">
-        <div class="card-top"><div class="card-name">StyleIQ</div><div class="status soon">Coming soon</div></div>
-        <p>Clothing fit and match assessment — cut, proportion, and pairing suited to you, not a generic size chart.</p>
-        <span class="card-link">In planning</span>
+        <div class="status soon badge-float">Coming soon</div>
+        <div class="card-body">
+          <div class="card-top"><div class="card-name">StyleIQ</div></div>
+          <p>Clothing fit and match assessment — cut, proportion, and pairing suited to you, not a generic size chart.</p>
+          <span class="card-link">In planning</span>
+        </div>
+        <div class="frost"></div>
       </div>
       <div class="card soon">
-        <div class="card-top"><div class="card-name">SpecsIQ</div><div class="status soon">Coming soon</div></div>
-        <p>Eyewear matching — frame shape and fit assessment against your face geometry and prescription.</p>
-        <span class="card-link">In planning</span>
+        <div class="status soon badge-float">Coming soon</div>
+        <div class="card-body">
+          <div class="card-top"><div class="card-name">SpecsIQ</div></div>
+          <p>Eyewear matching — frame shape and fit assessment against your face geometry and prescription.</p>
+          <span class="card-link">In planning</span>
+        </div>
+        <div class="frost"></div>
       </div>
     </div>
   </div>
