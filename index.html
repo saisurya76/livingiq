@@ -96,6 +96,10 @@
   .card.live:hover{ border-color:var(--teal); transform:translateY(-2px); }
   .card-top{ display:flex; align-items:center; justify-content:space-between; }
   .card-name{ font-family:'Space Grotesk', sans-serif; font-size:1.15rem; font-weight:600; }
+  .verb-tag{
+    font-family:'IBM Plex Mono', monospace; font-size:0.68rem; letter-spacing:0.08em;
+    text-transform:uppercase; color:var(--muted); margin-top:-6px;
+  }
   .status{ font-family:'IBM Plex Mono', monospace; font-size:0.68rem; letter-spacing:0.06em; padding:3px 9px; border-radius:20px; text-transform:uppercase; }
   .status.live{ color:#06231F; background:var(--teal); }
   .status.soon{ color:var(--muted); border:1px solid var(--line); }
@@ -186,8 +190,12 @@
   <div class="wrap">
     <div class="wordmark"><span class="dot"></span>LivingIQ</div>
     <div class="navlinks">
-      <a href="#assess">Assess</a>
-      <a href="#match">Match</a>
+      <a href="#work">Work</a>
+      <a href="#assets">Assets</a>
+      <a href="#protect">Protect</a>
+      <a href="#spending">Spending</a>
+      <a href="#self">Self</a>
+      <a href="#health">Health</a>
       <a href="#founder">Founder</a>
       <a href="https://github.com/saisurya76" target="_blank" rel="noopener">GitHub</a>
     </div>
@@ -220,36 +228,79 @@
   </div>
 </header>
 
-<section id="assess">
+<section id="work">
   <div class="wrap">
     <div class="section-head">
-      <h2>Assess</h2>
-      <div class="section-tag">what is this actually worth</div>
+      <h2>Work</h2>
+      <div class="section-tag">is this actually the right move</div>
     </div>
     <div class="grid">
       <div class="card live">
-        <div class="card-top"><div class="card-name">AccidentIQ</div><div class="status live">Live</div></div>
-        <p>Four-pass AI forensic pipeline for vehicle accidents — damage assessment, fault apportionment, terrain analysis, and cost/legal synthesis, with jurisdiction-aware pricing.</p>
-        <a class="card-link" href="https://accidentiqweb.com" target="_blank" rel="noopener">accidentiqweb.com →</a>
-      </div>
-      <div class="card live">
-        <div class="card-top"><div class="card-name">PropertyIQ</div><div class="status live">Live</div></div>
-        <p>Pricing and security assessment for residential property, currently focused on Hyderabad, India.</p>
-        <a class="card-link" href="https://app.propertyiqweb.com" target="_blank" rel="noopener">app.propertyiqweb.com →</a>
+        <div class="card-top"><div class="card-name">ProjectIQ</div><div class="status live">Live</div></div>
+        <div class="verb-tag">Assess</div>
+        <p>Single-screen analysis of any project — repo, zip, or description — producing an evidence-based report and execution plan for AI adoption and architectural transformation.</p>
+        <a class="card-link" href="https://projectiq.livingiqweb.com" target="_blank" rel="noopener">projectiq.livingiqweb.com →</a>
       </div>
       <div class="card soon">
         <div class="status soon badge-float">Coming soon</div>
         <div class="card-body">
           <div class="card-top"><div class="card-name">SalaryIQ</div></div>
+          <div class="verb-tag">Assess</div>
           <p>Compensation and appraisal benchmarking — know if your salary and raise are actually fair for your role and market.</p>
           <span class="card-link">In planning</span>
         </div>
         <div class="frost"></div>
       </div>
+    </div>
+  </div>
+</section>
+
+<section id="assets">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Assets</h2>
+      <div class="section-tag">what you own, and its real worth</div>
+    </div>
+    <div class="grid">
+      <div class="card live">
+        <div class="card-top"><div class="card-name">PropertyIQ</div><div class="status live">Live</div></div>
+        <div class="verb-tag">Assess</div>
+        <p>Pricing and security assessment for residential property, currently focused on Hyderabad, India.</p>
+        <a class="card-link" href="https://app.propertyiqweb.com" target="_blank" rel="noopener">app.propertyiqweb.com →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="protect">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Protect</h2>
+      <div class="section-tag">when something goes wrong</div>
+    </div>
+    <div class="grid">
+      <div class="card live">
+        <div class="card-top"><div class="card-name">AccidentIQ</div><div class="status live">Live</div></div>
+        <div class="verb-tag">Assess</div>
+        <p>Four-pass AI forensic pipeline for vehicle accidents — damage assessment, fault apportionment, terrain analysis, and cost/legal synthesis, with jurisdiction-aware pricing.</p>
+        <a class="card-link" href="https://accidentiqweb.com" target="_blank" rel="noopener">accidentiqweb.com →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="spending">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Spending</h2>
+      <div class="section-tag">is this actually a fair price</div>
+    </div>
+    <div class="grid">
       <div class="card soon">
         <div class="status soon badge-float">Coming soon</div>
         <div class="card-body">
           <div class="card-top"><div class="card-name">PriceIQ</div></div>
+          <div class="verb-tag">Assess</div>
           <p>Product pricing assessment — is this actually a fair price, or a markup dressed up as a deal.</p>
           <span class="card-link">In planning</span>
         </div>
@@ -259,17 +310,18 @@
   </div>
 </section>
 
-<section id="match">
+<section id="self">
   <div class="wrap">
     <div class="section-head">
-      <h2>Match</h2>
-      <div class="section-tag">does this actually fit</div>
+      <h2>Self</h2>
+      <div class="section-tag">how you present, and what fits</div>
     </div>
     <div class="grid">
       <div class="card soon">
         <div class="status soon badge-float">Coming soon</div>
         <div class="card-body">
           <div class="card-top"><div class="card-name">StyleIQ</div></div>
+          <div class="verb-tag">Match</div>
           <p>Clothing fit and match assessment — cut, proportion, and pairing suited to you, not a generic size chart.</p>
           <span class="card-link">In planning</span>
         </div>
@@ -279,8 +331,30 @@
         <div class="status soon badge-float">Coming soon</div>
         <div class="card-body">
           <div class="card-top"><div class="card-name">SpecsIQ</div></div>
+          <div class="verb-tag">Match</div>
           <p>Eyewear matching — frame shape and fit assessment against your face geometry and prescription.</p>
           <span class="card-link">In planning</span>
+        </div>
+        <div class="frost"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="health">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Health</h2>
+      <div class="section-tag">on the roadmap</div>
+    </div>
+    <div class="grid">
+      <div class="card soon">
+        <div class="status soon badge-float">Planned</div>
+        <div class="card-body">
+          <div class="card-top"><div class="card-name">HealthIQ</div></div>
+          <div class="verb-tag">Assess</div>
+          <p>Not yet scoped — the intent is to bring the same evidence-based approach to personal health decisions.</p>
+          <span class="card-link">Not started</span>
         </div>
         <div class="frost"></div>
       </div>
@@ -293,7 +367,7 @@
     <div class="founder">
       <div class="avatar"><img src="assets/profile.jpg" alt="Surya" style="width:100%;height:100%;border-radius:50%;object-fit:cover;"></div>
       <div>
-        <div class="role">Founder, LivingIQ</div>
+        <div class="role">Founder &amp; solo builder</div>
         <h3>Surya</h3>
         <p>Building LivingIQ end to end — product, AI pipelines, and infrastructure — as a solo entrepreneur, with Claude as primary build partner. Also active in open-source infrastructure tooling (IaC).</p>
         <div class="links">
@@ -318,6 +392,7 @@
   const readings = [
     { label: "accidentiq — fault confidence", value: "87%", sub: "Rear quarter-panel impact, moderate severity", pct: 0.87 },
     { label: "propertyiq — valuation confidence", value: "92%", sub: "Hyderabad, Gachibowli micro-market", pct: 0.92 },
+    { label: "projectiq — transformation readiness", value: "68%", sub: "Architecture fit for AI adoption", pct: 0.68 },
     { label: "salaryiq — market percentile", value: "61%", sub: "Coming soon", pct: 0.61 },
     { label: "priceiq — fair-price score", value: "74%", sub: "Coming soon", pct: 0.74 }
   ];
