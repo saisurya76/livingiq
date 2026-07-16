@@ -77,8 +77,15 @@
   .gauge-label{ font-family:'IBM Plex Mono', monospace; font-size:0.72rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px; }
   .gauge-value{ font-family:'IBM Plex Mono', monospace; font-size:1.6rem; color:var(--teal); font-weight:500; }
   .gauge-sub{ font-size:0.85rem; color:var(--muted); margin-top:2px; }
-  svg#dial{ display:block; margin:18px auto 0; }
-  #needle{ transform-origin:150px 150px; transition:transform 1.1s cubic-bezier(.4,0,.2,1); }
+  .mascot-stage{ width:150px; height:150px; margin:18px auto 0; display:flex; align-items:center; justify-content:center; }
+  .mascot-stage svg{ width:100%; height:100%; display:block; }
+  @keyframes mascotPop{
+    0%   { transform:scale(0.55) rotate(-10deg); opacity:0; }
+    65%  { transform:scale(1.1) rotate(4deg); opacity:1; }
+    100% { transform:scale(1) rotate(0deg); opacity:1; }
+  }
+  .mascot-pop{ animation:mascotPop 0.6s cubic-bezier(.34,1.56,.64,1); transform-origin:center; }
+  @media (prefers-reduced-motion: reduce){ .mascot-pop{ animation:none; } }
 
   /* SECTIONS */
   section{ padding:64px 0; }
@@ -96,6 +103,9 @@
   .card.live:hover{ border-color:var(--teal); transform:translateY(-2px); }
   .card-top{ display:flex; align-items:center; justify-content:space-between; }
   .card-name{ font-family:'Space Grotesk', sans-serif; font-size:1.15rem; font-weight:600; }
+  .card-icon{ width:38px; height:38px; flex-shrink:0; margin-right:10px; }
+  .card-icon svg{ width:100%; height:100%; display:block; }
+  .card-name-group{ display:flex; align-items:center; }
   .verb-tag{
     font-family:'IBM Plex Mono', monospace; font-size:0.68rem; letter-spacing:0.08em;
     text-transform:uppercase; color:var(--muted); margin-top:-6px;
@@ -225,12 +235,7 @@
       <div class="gauge-label" id="gauge-label">accidentiq — fault confidence</div>
       <div class="gauge-value" id="gauge-value">87%</div>
       <div class="gauge-sub" id="gauge-sub">Rear quarter-panel impact, moderate severity</div>
-      <svg id="dial" width="260" height="150" viewBox="0 0 300 170">
-        <path d="M 30 150 A 120 120 0 0 1 270 150" fill="none" stroke="#253048" stroke-width="14" stroke-linecap="round"/>
-        <path id="arc" d="M 30 150 A 120 120 0 0 1 270 150" fill="none" stroke="#5EEAD4" stroke-width="14" stroke-linecap="round" stroke-dasharray="377" stroke-dashoffset="60"/>
-        <line id="needle" x1="150" y1="150" x2="150" y2="50" stroke="#F5B841" stroke-width="3" stroke-linecap="round" transform="rotate(67 150 150)"/>
-        <circle cx="150" cy="150" r="7" fill="#E7ECF5"/>
-      </svg>
+      <div class="mascot-stage" id="mascot-stage"></div>
     </div>
   </div>
 </header>
@@ -253,7 +258,7 @@
     </div>
     <div class="grid">
       <div class="card live">
-        <div class="card-top"><div class="card-name">ProjectIQ</div><div class="status live">Live</div></div>
+        <div class="card-top"><div class="card-name-group"><div class="card-icon" data-icon="owl"></div><div class="card-name">ProjectIQ</div></div><div class="status live">Live</div></div>
         <div class="verb-tag">Assess</div>
         <p>Single-screen analysis of any project — repo, zip, or description — producing an evidence-based report and execution plan for AI adoption and architectural transformation.</p>
         <a class="card-link" href="https://projectiq.livingiqweb.com" target="_blank" rel="noopener">projectiq.livingiqweb.com →</a>
@@ -261,7 +266,7 @@
       <div class="card soon">
         <div class="status soon badge-float">Coming soon</div>
         <div class="card-body">
-          <div class="card-top"><div class="card-name">SalaryIQ</div></div>
+          <div class="card-top"><div class="card-name-group"><div class="card-icon" data-icon="owl"></div><div class="card-name">SalaryIQ</div></div></div>
           <div class="verb-tag">Assess</div>
           <p>Compensation and appraisal benchmarking — know if your salary and raise are actually fair for your role and market.</p>
           <span class="card-link">In planning</span>
@@ -280,7 +285,7 @@
     </div>
     <div class="grid">
       <div class="card live">
-        <div class="card-top"><div class="card-name">PropertyIQ</div><div class="status live">Live</div></div>
+        <div class="card-top"><div class="card-name-group"><div class="card-icon" data-icon="turtle"></div><div class="card-name">PropertyIQ</div></div><div class="status live">Live</div></div>
         <div class="verb-tag">Assess</div>
         <p>Pricing and security assessment for residential property, currently focused on Hyderabad, India.</p>
         <a class="card-link" href="https://app.propertyiqweb.com" target="_blank" rel="noopener">app.propertyiqweb.com →</a>
@@ -297,7 +302,7 @@
     </div>
     <div class="grid">
       <div class="card live">
-        <div class="card-top"><div class="card-name">AccidentIQ</div><div class="status live">Live</div></div>
+        <div class="card-top"><div class="card-name-group"><div class="card-icon" data-icon="car"></div><div class="card-name">AccidentIQ</div></div><div class="status live">Live</div></div>
         <div class="verb-tag">Assess</div>
         <p>Four-pass AI forensic pipeline for vehicle accidents — damage assessment, fault apportionment, terrain analysis, and cost/legal synthesis, with jurisdiction-aware pricing.</p>
         <a class="card-link" href="https://accidentiqweb.com" target="_blank" rel="noopener">accidentiqweb.com →</a>
@@ -316,7 +321,7 @@
       <div class="card soon">
         <div class="status soon badge-float">Coming soon</div>
         <div class="card-body">
-          <div class="card-top"><div class="card-name">PriceIQ</div></div>
+          <div class="card-top"><div class="card-name-group"><div class="card-icon" data-icon="piggy"></div><div class="card-name">PriceIQ</div></div></div>
           <div class="verb-tag">Assess</div>
           <p>Product pricing assessment — is this actually a fair price, or a markup dressed up as a deal.</p>
           <span class="card-link">In planning</span>
@@ -337,7 +342,7 @@
       <div class="card soon">
         <div class="status soon badge-float">Coming soon</div>
         <div class="card-body">
-          <div class="card-top"><div class="card-name">StyleIQ</div></div>
+          <div class="card-top"><div class="card-name-group"><div class="card-icon" data-icon="cat"></div><div class="card-name">StyleIQ</div></div></div>
           <div class="verb-tag">Match</div>
           <p>Clothing fit and match assessment — cut, proportion, and pairing suited to you, not a generic size chart.</p>
           <span class="card-link">In planning</span>
@@ -347,7 +352,7 @@
       <div class="card soon">
         <div class="status soon badge-float">Coming soon</div>
         <div class="card-body">
-          <div class="card-top"><div class="card-name">SpecsIQ</div></div>
+          <div class="card-top"><div class="card-name-group"><div class="card-icon" data-icon="cat"></div><div class="card-name">SpecsIQ</div></div></div>
           <div class="verb-tag">Match</div>
           <p>Eyewear matching — frame shape and fit assessment against your face geometry and prescription.</p>
           <span class="card-link">In planning</span>
@@ -368,7 +373,7 @@
       <div class="card soon">
         <div class="status soon badge-float">Planned</div>
         <div class="card-body">
-          <div class="card-top"><div class="card-name">HealthIQ</div></div>
+          <div class="card-top"><div class="card-name-group"><div class="card-icon" data-icon="panda"></div><div class="card-name">HealthIQ</div></div></div>
           <div class="verb-tag">Assess</div>
           <p>Not yet scoped — the intent is to bring the same evidence-based approach to personal health decisions.</p>
           <span class="card-link">Not started</span>
@@ -405,41 +410,120 @@
 </footer>
 
 <script>
-  // Cycle the signature gauge through each product's characteristic metric
+  // Standalone mascot icons — same characters as the "Meet the family" strip,
+  // fixed to the des1 palette so each app has one stable icon identity
+  const ICONS = {
+    owl: `<svg viewBox="0 0 100 92"><g transform="translate(-42,-104)" stroke="#213347" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+      <ellipse cx="90" cy="150" rx="46" ry="44" fill="#2FB89C"/>
+      <path d="M62,116 L74,132 L54,134 Z" fill="#2FB89C"/>
+      <path d="M118,116 L106,132 L126,134 Z" fill="#2FB89C"/>
+      <circle cx="72" cy="148" r="15" fill="#FDFBF4" stroke-width="1.5"/>
+      <circle cx="108" cy="148" r="15" fill="#FDFBF4" stroke-width="1.5"/>
+      <circle cx="74" cy="150" r="6" fill="#213347" stroke="none"/>
+      <circle cx="106" cy="150" r="6" fill="#213347" stroke="none"/>
+      <path d="M85,164 L95,164 L90,172 Z" fill="#F5B841" stroke-width="1.5"/>
+      <circle cx="128" cy="176" r="9" fill="none" stroke="#F5B841" stroke-width="2"/>
+      <line x1="135" y1="183" x2="142" y2="190" stroke="#F5B841" stroke-width="2"/>
+    </g></svg>`,
+    turtle: `<svg viewBox="0 0 96 76"><g transform="translate(-142,-180)" stroke="#213347" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+      <ellipse cx="190" cy="228" rx="44" ry="36" fill="#8FC98A"/>
+      <path d="M160,204 L190,182 L220,204 Z" fill="#F5B841"/>
+      <circle cx="178" cy="222" r="5" fill="#213347" stroke="none"/>
+      <circle cx="202" cy="222" r="5" fill="#213347" stroke="none"/>
+      <path d="M180,236 Q190,242 200,236" fill="none" stroke-width="2"/>
+      <ellipse cx="152" cy="248" rx="8" ry="6" fill="#8FC98A"/>
+      <ellipse cx="228" cy="248" rx="8" ry="6" fill="#8FC98A"/>
+    </g></svg>`,
+    car: `<svg viewBox="0 0 88 72"><g transform="translate(-246,-120)" stroke="#213347" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+      <rect x="248" y="132" width="84" height="46" rx="20" fill="#EE8266"/>
+      <circle cx="310" cy="180" r="10" fill="#3a3f4b"/>
+      <circle cx="270" cy="180" r="10" fill="#3a3f4b"/>
+      <circle cx="270" cy="150" r="10" fill="#FDFBF4" stroke-width="1.5"/>
+      <circle cx="310" cy="150" r="10" fill="#FDFBF4" stroke-width="1.5"/>
+      <circle cx="271" cy="151" r="4" fill="#213347" stroke="none"/>
+      <circle cx="311" cy="151" r="4" fill="#213347" stroke="none"/>
+      <rect x="278" y="132" width="24" height="10" rx="3" fill="#5EEAD4" transform="rotate(-18 290 137)" stroke-width="1.5"/>
+      <path d="M287,128 l3,6 -6,2 6,2 -3,6" fill="none" stroke="#F5B841" stroke-width="1.5"/>
+    </g></svg>`,
+    piggy: `<svg viewBox="0 0 116 80"><g transform="translate(-344,-188)" stroke="#213347" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+      <ellipse cx="390" cy="228" rx="44" ry="38" fill="#F2A9C4"/>
+      <path d="M364,196 L376,206 L358,208 Z" fill="#F2A9C4"/>
+      <path d="M416,196 L404,206 L422,208 Z" fill="#F2A9C4"/>
+      <ellipse cx="390" cy="238" rx="16" ry="10" fill="#F2A9C4"/>
+      <circle cx="384" cy="238" r="2.5" fill="#213347" stroke="none"/>
+      <circle cx="396" cy="238" r="2.5" fill="#213347" stroke="none"/>
+      <circle cx="372" cy="216" r="4" fill="#213347" stroke="none"/>
+      <circle cx="408" cy="216" r="4" fill="#213347" stroke="none"/>
+      <rect x="382" y="190" width="16" height="4" rx="2" fill="#213347" stroke="none"/>
+      <path d="M424,238 Q432,238 430,228" fill="none" stroke-width="2"/>
+      <circle cx="446" cy="252" r="11" fill="#F5B841" stroke-width="1.5"/>
+      <text x="446" y="257" text-anchor="middle" font-size="11" fill="#213347" stroke="none" font-weight="500">$</text>
+    </g></svg>`,
+    cat: `<svg viewBox="0 0 88 78"><g transform="translate(-446,-114)" stroke="#213347" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+      <circle cx="490" cy="150" r="42" fill="#B49CE0"/>
+      <path d="M462,116 L474,132 L454,132 Z" fill="#B49CE0"/>
+      <path d="M518,116 L506,132 L526,132 Z" fill="#B49CE0"/>
+      <ellipse cx="472" cy="150" rx="16" ry="11" fill="#213347" stroke-width="1.5"/>
+      <ellipse cx="508" cy="150" rx="16" ry="11" fill="#213347" stroke-width="1.5"/>
+      <line x1="488" y1="150" x2="492" y2="150" stroke="#5EEAD4" stroke-width="2"/>
+      <path d="M474,172 Q490,180 506,172" fill="none" stroke-width="2"/>
+      <ellipse cx="490" cy="184" rx="10" ry="6" fill="#F5B841" stroke-width="1.5"/>
+      <line x1="480" y1="184" x2="465" y2="180" stroke-width="1.5"/>
+      <line x1="500" y1="184" x2="515" y2="180" stroke-width="1.5"/>
+    </g></svg>`,
+    panda: `<svg viewBox="0 0 92 98"><g transform="translate(-544,-176)" stroke="#213347" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+      <circle cx="590" cy="228" r="44" fill="#FDFBF4"/>
+      <path d="M556,196 L568,212 L548,214 Z" fill="#213347" stroke="none"/>
+      <path d="M624,196 L612,212 L632,214 Z" fill="#213347" stroke="none"/>
+      <ellipse cx="570" cy="224" rx="13" ry="16" fill="#213347" stroke="none"/>
+      <ellipse cx="610" cy="224" rx="13" ry="16" fill="#213347" stroke="none"/>
+      <circle cx="573" cy="222" r="3.5" fill="#FDFBF4" stroke="none"/>
+      <circle cx="613" cy="222" r="3.5" fill="#FDFBF4" stroke="none"/>
+      <path d="M584,240 L590,246 L596,240 Z" fill="#213347" stroke="none"/>
+      <path d="M590,246 Q590,252 596,254" fill="none" stroke-width="2"/>
+      <path d="M574,264 Q590,272 606,264" fill="none" stroke-width="2"/>
+      <path d="M590,196 Q582,186 590,178 Q598,186 590,196" fill="#F5B841" stroke-width="1.5"/>
+    </g></svg>`
+  };
+
+  // One representative reading per section, cycling through the mascot family
   const readings = [
-    { label: "accidentiq — fault confidence", value: "87%", sub: "Rear quarter-panel impact, moderate severity", pct: 0.87 },
-    { label: "propertyiq — valuation confidence", value: "92%", sub: "Hyderabad, Gachibowli micro-market", pct: 0.92 },
-    { label: "projectiq — transformation readiness", value: "68%", sub: "Architecture fit for AI adoption", pct: 0.68 },
-    { label: "salaryiq — market percentile", value: "61%", sub: "Coming soon", pct: 0.61 },
-    { label: "priceiq — fair-price score", value: "74%", sub: "Coming soon", pct: 0.74 }
+    { icon: "owl",    label: "projectiq — transformation readiness", value: "68%", sub: "Architecture fit for AI adoption" },
+    { icon: "turtle", label: "propertyiq — valuation confidence",    value: "92%", sub: "Hyderabad, Gachibowli micro-market" },
+    { icon: "car",    label: "accidentiq — fault confidence",        value: "87%", sub: "Rear quarter-panel impact, moderate severity" },
+    { icon: "piggy",  label: "priceiq — fair-price score",           value: "74%", sub: "Coming soon" },
+    { icon: "cat",    label: "self — fit confidence",                value: "61%", sub: "Coming soon" },
+    { icon: "panda",  label: "healthiq — readiness",                 value: "—",   sub: "Not yet scoped" }
   ];
+
   let i = 0;
   const labelEl = document.getElementById('gauge-label');
   const valueEl = document.getElementById('gauge-value');
   const subEl = document.getElementById('gauge-sub');
-  const needle = document.getElementById('needle');
-  const arc = document.getElementById('arc');
-  const arcLen = 377;
+  const stage = document.getElementById('mascot-stage');
+
+  // Fill each product card's small icon badge from the same ICONS map
+  document.querySelectorAll('.card-icon[data-icon]').forEach(el => {
+    el.innerHTML = ICONS[el.dataset.icon] || '';
+  });
 
   function render(r){
     labelEl.textContent = r.label;
     valueEl.textContent = r.value;
     subEl.textContent = r.sub;
-    const angle = -90 + (r.pct * 180); // -90 (left) to +90 (right)
-    needle.setAttribute('transform', `rotate(${angle} 150 150)`);
-    arc.setAttribute('stroke-dashoffset', (1 - r.pct) * arcLen);
+    stage.innerHTML = ICONS[r.icon];
+    const svgEl = stage.querySelector('svg');
+    if (svgEl) {
+      svgEl.classList.remove('mascot-pop');
+      void svgEl.offsetWidth; // restart animation
+      svgEl.classList.add('mascot-pop');
+    }
   }
   render(readings[0]);
   setInterval(() => {
     i = (i + 1) % readings.length;
     render(readings[i]);
   }, 3400);
-
-  // Respect reduced-motion preference
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    needle.style.transition = 'none';
-    arc.style.transition = 'none';
-  }
 </script>
 
 <script>
