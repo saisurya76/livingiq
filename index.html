@@ -182,6 +182,13 @@
   footer .wrap{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
   footer p{ color:var(--muted); font-size:0.85rem; }
   footer .roadmap-note{ font-family:'IBM Plex Mono', monospace; font-size:0.75rem; color:var(--amber); }
+
+  #mascot-strip{ width:100%; }
+  #mascot-strip svg{ width:100%; height:auto; display:block; }
+  #mascot-strip [data-target]{ cursor:pointer; }
+  #mascot-strip .mascot-node{ transition: transform 0.2s ease; transform-origin:center; transform-box:fill-box; }
+  #mascot-strip .mascot-node:hover{ transform:scale(1.08) translateY(-3px); }
+  #mascot-strip text[data-target]:hover{ fill:var(--teal); }
 </style>
 </head>
 <body>
@@ -227,6 +234,16 @@
     </div>
   </div>
 </header>
+
+<section id="family">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Meet the family</h2>
+      <div class="section-tag">one journey, six instruments</div>
+    </div>
+    <div id="mascot-strip"></div>
+  </div>
+</section>
 
 <section id="work">
   <div class="wrap">
@@ -423,6 +440,66 @@
     needle.style.transition = 'none';
     arc.style.transition = 'none';
   }
+</script>
+
+<script>
+  const mascotVariants = [
+    // des1 — pastel bodies, unified teal/amber accents
+    `<svg viewBox="0 0 680 340" role="img"><title>LivingIQ mascots</title><desc>Six mascots representing Work, Assets, Protect, Spending, Self, and Health.</desc>
+    <path d="M90,150 C140,150 140,220 190,220 C240,220 240,150 290,150 C340,150 340,220 390,220 C440,220 440,150 490,150 C540,150 540,220 590,220" fill="none" stroke="#5EEAD4" stroke-width="2" stroke-dasharray="7 7" opacity="0.55"/>
+    <g stroke="#213347" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+    <g class="mascot-node" data-target="#work"><ellipse cx="90" cy="150" rx="46" ry="44" fill="#2FB89C"/><path d="M62,116 L74,132 L54,134 Z" fill="#2FB89C"/><path d="M118,116 L106,132 L126,134 Z" fill="#2FB89C"/><circle cx="72" cy="148" r="15" fill="#FDFBF4" stroke-width="1.5"/><circle cx="108" cy="148" r="15" fill="#FDFBF4" stroke-width="1.5"/><circle cx="74" cy="150" r="6" fill="#213347" stroke="none"/><circle cx="106" cy="150" r="6" fill="#213347" stroke="none"/><path d="M85,164 L95,164 L90,172 Z" fill="#F5B841" stroke-width="1.5"/><circle cx="128" cy="176" r="9" fill="none" stroke="#F5B841" stroke-width="2"/><line x1="135" y1="183" x2="142" y2="190" stroke="#F5B841" stroke-width="2"/></g>
+    <g class="mascot-node" data-target="#assets"><ellipse cx="190" cy="228" rx="44" ry="36" fill="#8FC98A"/><path d="M160,204 L190,182 L220,204 Z" fill="#F5B841"/><circle cx="178" cy="222" r="5" fill="#213347" stroke="none"/><circle cx="202" cy="222" r="5" fill="#213347" stroke="none"/><path d="M180,236 Q190,242 200,236" fill="none" stroke-width="2"/><ellipse cx="152" cy="248" rx="8" ry="6" fill="#8FC98A"/><ellipse cx="228" cy="248" rx="8" ry="6" fill="#8FC98A"/></g>
+    <g class="mascot-node" data-target="#protect"><rect x="248" y="132" width="84" height="46" rx="20" fill="#EE8266"/><circle cx="310" cy="180" r="10" fill="#3a3f4b"/><circle cx="270" cy="180" r="10" fill="#3a3f4b"/><circle cx="270" cy="150" r="10" fill="#FDFBF4" stroke-width="1.5"/><circle cx="310" cy="150" r="10" fill="#FDFBF4" stroke-width="1.5"/><circle cx="271" cy="151" r="4" fill="#213347" stroke="none"/><circle cx="311" cy="151" r="4" fill="#213347" stroke="none"/><rect x="278" y="132" width="24" height="10" rx="3" fill="#5EEAD4" transform="rotate(-18 290 137)" stroke-width="1.5"/><path d="M287,128 l3,6 -6,2 6,2 -3,6" fill="none" stroke="#F5B841" stroke-width="1.5"/></g>
+    <g class="mascot-node" data-target="#spending"><ellipse cx="390" cy="228" rx="44" ry="38" fill="#F2A9C4"/><path d="M364,196 L376,206 L358,208 Z" fill="#F2A9C4"/><path d="M416,196 L404,206 L422,208 Z" fill="#F2A9C4"/><ellipse cx="390" cy="238" rx="16" ry="10" fill="#F2A9C4"/><circle cx="384" cy="238" r="2.5" fill="#213347" stroke="none"/><circle cx="396" cy="238" r="2.5" fill="#213347" stroke="none"/><circle cx="372" cy="216" r="4" fill="#213347" stroke="none"/><circle cx="408" cy="216" r="4" fill="#213347" stroke="none"/><rect x="382" y="190" width="16" height="4" rx="2" fill="#213347" stroke="none"/><path d="M424,238 Q432,238 430,228" fill="none" stroke-width="2"/><circle cx="446" cy="252" r="11" fill="#F5B841" stroke-width="1.5"/><text x="446" y="257" text-anchor="middle" font-size="11" fill="#213347" stroke="none" font-weight="500">$</text></g>
+    <g class="mascot-node" data-target="#self"><circle cx="490" cy="150" r="42" fill="#B49CE0"/><path d="M462,116 L474,132 L454,132 Z" fill="#B49CE0"/><path d="M518,116 L506,132 L526,132 Z" fill="#B49CE0"/><ellipse cx="472" cy="150" rx="16" ry="11" fill="#213347" stroke-width="1.5"/><ellipse cx="508" cy="150" rx="16" ry="11" fill="#213347" stroke-width="1.5"/><line x1="488" y1="150" x2="492" y2="150" stroke="#5EEAD4" stroke-width="2"/><path d="M474,172 Q490,180 506,172" fill="none" stroke-width="2"/><ellipse cx="490" cy="184" rx="10" ry="6" fill="#F5B841" stroke-width="1.5"/><line x1="480" y1="184" x2="465" y2="180" stroke-width="1.5"/><line x1="500" y1="184" x2="515" y2="180" stroke-width="1.5"/></g>
+    <g class="mascot-node" data-target="#health"><circle cx="590" cy="228" r="44" fill="#FDFBF4"/><path d="M556,196 L568,212 L548,214 Z" fill="#213347" stroke="none"/><path d="M624,196 L612,212 L632,214 Z" fill="#213347" stroke="none"/><ellipse cx="570" cy="224" rx="13" ry="16" fill="#213347" stroke="none"/><ellipse cx="610" cy="224" rx="13" ry="16" fill="#213347" stroke="none"/><circle cx="573" cy="222" r="3.5" fill="#FDFBF4" stroke="none"/><circle cx="613" cy="222" r="3.5" fill="#FDFBF4" stroke="none"/><path d="M584,240 L590,246 L596,240 Z" fill="#213347" stroke="none"/><path d="M590,246 Q590,252 596,254" fill="none" stroke-width="2"/><path d="M574,264 Q590,272 606,264" fill="none" stroke-width="2"/><path d="M590,196 Q582,186 590,178 Q598,186 590,196" fill="#F5B841" stroke-width="1.5"/></g>
+    </g>
+    <g font-family="'IBM Plex Mono', monospace" font-size="13" fill="#8592AD">
+    <text data-target="#work" x="90" y="230" text-anchor="middle">ProjectIQ</text><text data-target="#assets" x="190" y="300" text-anchor="middle">PropertyIQ</text><text data-target="#protect" x="290" y="230" text-anchor="middle">AccidentIQ</text><text data-target="#spending" x="390" y="300" text-anchor="middle">PriceIQ</text><text data-target="#self" x="490" y="230" text-anchor="middle">Self</text><text data-target="#health" x="590" y="300" text-anchor="middle">HealthIQ</text>
+    </g></svg>`,
+
+    // des2 — fully brand-recolored (navy/teal/amber only)
+    `<svg viewBox="0 0 680 340" role="img"><title>LivingIQ mascots</title><desc>Six mascots representing Work, Assets, Protect, Spending, Self, and Health, in navy, teal, and amber.</desc>
+    <path d="M90,150 C140,150 140,220 190,220 C240,220 240,150 290,150 C340,150 340,220 390,220 C440,220 440,150 490,150 C540,150 540,220 590,220" fill="none" stroke="#5EEAD4" stroke-width="2" stroke-dasharray="7 7" opacity="0.5"/>
+    <g stroke="#0B1220" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+    <g class="mascot-node" data-target="#work"><ellipse cx="90" cy="150" rx="46" ry="44" fill="#0F6E56"/><path d="M62,116 L74,132 L54,134 Z" fill="#0F6E56"/><path d="M118,116 L106,132 L126,134 Z" fill="#0F6E56"/><circle cx="72" cy="148" r="15" fill="#E7ECF5" stroke-width="1.5"/><circle cx="108" cy="148" r="15" fill="#E7ECF5" stroke-width="1.5"/><circle cx="74" cy="150" r="6" fill="#0B1220" stroke="none"/><circle cx="106" cy="150" r="6" fill="#0B1220" stroke="none"/><path d="M85,164 L95,164 L90,172 Z" fill="#F5B841" stroke-width="1.5"/><circle cx="128" cy="176" r="9" fill="none" stroke-width="2"/><line x1="135" y1="183" x2="142" y2="190" stroke-width="2"/></g>
+    <g class="mascot-node" data-target="#assets"><ellipse cx="190" cy="228" rx="44" ry="36" fill="#1D9E75"/><path d="M160,204 L190,182 L220,204 Z" fill="#F5B841"/><circle cx="178" cy="222" r="5" fill="#0B1220" stroke="none"/><circle cx="202" cy="222" r="5" fill="#0B1220" stroke="none"/><path d="M180,236 Q190,242 200,236" fill="none" stroke-width="2"/><ellipse cx="152" cy="248" rx="8" ry="6" fill="#1D9E75"/><ellipse cx="228" cy="248" rx="8" ry="6" fill="#1D9E75"/></g>
+    <g class="mascot-node" data-target="#protect"><rect x="248" y="132" width="84" height="46" rx="20" fill="#17223A"/><circle cx="310" cy="180" r="10" fill="#5EEAD4"/><circle cx="270" cy="180" r="10" fill="#5EEAD4"/><circle cx="270" cy="150" r="10" fill="#E7ECF5" stroke-width="1.5"/><circle cx="310" cy="150" r="10" fill="#E7ECF5" stroke-width="1.5"/><circle cx="271" cy="151" r="4" fill="#0B1220" stroke="none"/><circle cx="311" cy="151" r="4" fill="#0B1220" stroke="none"/><rect x="278" y="132" width="24" height="10" rx="3" fill="#E7ECF5" transform="rotate(-18 290 137)" stroke-width="1.5"/><path d="M287,128 l3,6 -6,2 6,2 -3,6" fill="none" stroke="#F5B841" stroke-width="1.5"/></g>
+    <g class="mascot-node" data-target="#spending"><ellipse cx="390" cy="228" rx="44" ry="38" fill="#5EEAD4"/><path d="M364,196 L376,206 L358,208 Z" fill="#5EEAD4"/><path d="M416,196 L404,206 L422,208 Z" fill="#5EEAD4"/><ellipse cx="390" cy="238" rx="16" ry="10" fill="#5EEAD4"/><circle cx="384" cy="238" r="2.5" fill="#0B1220" stroke="none"/><circle cx="396" cy="238" r="2.5" fill="#0B1220" stroke="none"/><circle cx="372" cy="216" r="4" fill="#0B1220" stroke="none"/><circle cx="408" cy="216" r="4" fill="#0B1220" stroke="none"/><rect x="382" y="190" width="16" height="4" rx="2" fill="#0B1220" stroke="none"/><path d="M424,238 Q432,238 430,228" fill="none" stroke-width="2"/><circle cx="446" cy="252" r="11" fill="#F5B841" stroke-width="1.5"/><text x="446" y="257" text-anchor="middle" font-size="11" fill="#0B1220" stroke="none" font-weight="500">$</text></g>
+    <g class="mascot-node" data-target="#self"><circle cx="490" cy="150" r="42" fill="#17223A"/><path d="M462,116 L474,132 L454,132 Z" fill="#17223A"/><path d="M518,116 L506,132 L526,132 Z" fill="#17223A"/><ellipse cx="472" cy="150" rx="16" ry="11" fill="#F5B841" stroke-width="1.5"/><ellipse cx="508" cy="150" rx="16" ry="11" fill="#F5B841" stroke-width="1.5"/><line x1="488" y1="150" x2="492" y2="150" stroke-width="2"/><path d="M474,172 Q490,180 506,172" fill="none" stroke-width="2"/><ellipse cx="490" cy="184" rx="10" ry="6" fill="#5EEAD4" stroke-width="1.5"/><line x1="480" y1="184" x2="465" y2="180" stroke-width="1.5"/><line x1="500" y1="184" x2="515" y2="180" stroke-width="1.5"/></g>
+    <g class="mascot-node" data-target="#health"><circle cx="590" cy="228" r="44" fill="#E7ECF5"/><path d="M556,196 L568,212 L548,214 Z" fill="#0B1220" stroke="none"/><path d="M624,196 L612,212 L632,214 Z" fill="#0B1220" stroke="none"/><ellipse cx="570" cy="224" rx="13" ry="16" fill="#0B1220" stroke="none"/><ellipse cx="610" cy="224" rx="13" ry="16" fill="#0B1220" stroke="none"/><circle cx="573" cy="222" r="3.5" fill="#E7ECF5" stroke="none"/><circle cx="613" cy="222" r="3.5" fill="#E7ECF5" stroke="none"/><path d="M584,240 L590,246 L596,240 Z" fill="#0B1220" stroke="none"/><path d="M590,246 Q590,252 596,254" fill="none" stroke-width="2"/><path d="M574,264 Q590,272 606,264" fill="none" stroke-width="2"/><path d="M590,196 Q582,186 590,178 Q598,186 590,196" fill="#F5B841" stroke-width="1.5"/></g>
+    </g>
+    <g font-family="'IBM Plex Mono', monospace" font-size="13" fill="#8592AD">
+    <text data-target="#work" x="90" y="230" text-anchor="middle">ProjectIQ</text><text data-target="#assets" x="190" y="300" text-anchor="middle">PropertyIQ</text><text data-target="#protect" x="290" y="230" text-anchor="middle">AccidentIQ</text><text data-target="#spending" x="390" y="300" text-anchor="middle">PriceIQ</text><text data-target="#self" x="490" y="230" text-anchor="middle">Self</text><text data-target="#health" x="590" y="300" text-anchor="middle">HealthIQ</text>
+    </g></svg>`,
+
+    // des3 — bright saturated, different species
+    `<svg viewBox="0 0 680 340" role="img"><title>LivingIQ mascots</title><desc>An alternative bright-colored set of six mascots for Work, Assets, Protect, Spending, Self, and Health.</desc>
+    <path d="M90,150 C140,150 140,220 190,220 C240,220 240,150 290,150 C340,150 340,220 390,220 C440,220 440,150 490,150 C540,150 540,220 590,220" fill="none" stroke="#FFB13C" stroke-width="2" stroke-dasharray="7 7" opacity="0.55"/>
+    <g stroke="#3A2E1D" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+    <g class="mascot-node" data-target="#work"><ellipse cx="90" cy="150" rx="46" ry="44" fill="#FF8A3D"/><path d="M58,110 L76,134 L48,132 Z" fill="#FF8A3D"/><path d="M122,110 L104,134 L132,132 Z" fill="#FF8A3D"/><path d="M60,116 L72,130 L52,130 Z" fill="#FFD9B0"/><path d="M120,116 L108,130 L128,130 Z" fill="#FFD9B0"/><circle cx="76" cy="150" r="9" fill="#3A2E1D" stroke="none"/><circle cx="104" cy="150" r="9" fill="#3A2E1D" stroke="none"/><circle cx="79" cy="147" r="2.5" fill="#fff" stroke="none"/><circle cx="107" cy="147" r="2.5" fill="#fff" stroke="none"/><ellipse cx="90" cy="166" rx="10" ry="7" fill="#FFD9B0" stroke-width="1.5"/><circle cx="90" cy="166" r="2.5" fill="#3A2E1D" stroke="none"/></g>
+    <g class="mascot-node" data-target="#assets"><ellipse cx="190" cy="230" rx="46" ry="40" fill="#9AD4E8"/><ellipse cx="160" cy="212" rx="18" ry="24" fill="#9AD4E8"/><ellipse cx="220" cy="212" rx="18" ry="24" fill="#9AD4E8"/><ellipse cx="160" cy="216" rx="10" ry="14" fill="#F2A9C4"/><ellipse cx="220" cy="216" rx="10" ry="14" fill="#F2A9C4"/><circle cx="178" cy="222" r="6" fill="#3A2E1D" stroke="none"/><circle cx="202" cy="222" r="6" fill="#3A2E1D" stroke="none"/><ellipse cx="190" cy="240" rx="20" ry="12" fill="#fff" stroke-width="1.5"/><ellipse cx="182" cy="240" r="3" fill="#3A2E1D" stroke="none"/><ellipse cx="198" cy="240" r="3" fill="#3A2E1D" stroke="none"/></g>
+    <g class="mascot-node" data-target="#protect"><circle cx="290" cy="150" r="44" fill="#FFCE45"/><ellipse cx="290" cy="188" rx="18" ry="10" fill="#3A2E1D"/><path d="M272,192 Q290,200 308,192" fill="none" stroke="#3A2E1D" stroke-width="2"/><circle cx="272" cy="146" r="10" fill="#fff" stroke-width="1.5"/><circle cx="308" cy="146" r="10" fill="#fff" stroke-width="1.5"/><circle cx="274" cy="147" r="4" fill="#3A2E1D" stroke="none"/><circle cx="310" cy="147" r="4" fill="#3A2E1D" stroke="none"/><rect x="248" y="132" width="20" height="34" rx="6" fill="#FFCE45"/><rect x="312" y="132" width="20" height="34" rx="6" fill="#FFCE45"/></g>
+    <g class="mascot-node" data-target="#spending"><ellipse cx="390" cy="228" rx="44" ry="38" fill="#F2A9C4"/><path d="M364,196 L376,206 L358,208 Z" fill="#F2A9C4"/><path d="M416,196 L404,206 L422,208 Z" fill="#F2A9C4"/><ellipse cx="390" cy="238" rx="16" ry="10" fill="#F2A9C4"/><circle cx="384" cy="238" r="2.5" fill="#3A2E1D" stroke="none"/><circle cx="396" cy="238" r="2.5" fill="#3A2E1D" stroke="none"/><circle cx="372" cy="216" r="4" fill="#3A2E1D" stroke="none"/><circle cx="408" cy="216" r="4" fill="#3A2E1D" stroke="none"/><rect x="382" y="190" width="16" height="4" rx="2" fill="#3A2E1D" stroke="none"/><path d="M424,238 Q432,238 430,228" fill="none" stroke-width="2"/><circle cx="446" cy="252" r="11" fill="#FFCE45" stroke-width="1.5"/><text x="446" y="257" text-anchor="middle" font-size="11" fill="#3A2E1D" stroke="none" font-weight="500">$</text></g>
+    <g class="mascot-node" data-target="#self"><circle cx="490" cy="150" r="42" fill="#C9A6EE"/><path d="M462,116 L474,132 L454,132 Z" fill="#C9A6EE"/><path d="M518,116 L506,132 L526,132 Z" fill="#C9A6EE"/><ellipse cx="472" cy="150" rx="16" ry="11" fill="#3A2E1D" stroke="none"/><ellipse cx="508" cy="150" rx="16" ry="11" fill="#3A2E1D" stroke="none"/><line x1="488" y1="150" x2="492" y2="150" stroke-width="2"/><path d="M474,172 Q490,180 506,172" fill="none" stroke-width="2"/><ellipse cx="490" cy="184" rx="10" ry="6" fill="#FF8A3D" stroke-width="1.5"/><line x1="480" y1="184" x2="465" y2="180" stroke-width="1.5"/><line x1="500" y1="184" x2="515" y2="180" stroke-width="1.5"/></g>
+    <g class="mascot-node" data-target="#health"><ellipse cx="590" cy="232" rx="44" ry="38" fill="#FFFDF6"/><ellipse cx="590" cy="204" rx="16" ry="10" fill="#FFFDF6"/><circle cx="572" cy="228" r="6" fill="#3A2E1D" stroke="none"/><circle cx="608" cy="228" r="6" fill="#3A2E1D" stroke="none"/><circle cx="574" cy="225" r="2" fill="#fff" stroke="none"/><circle cx="610" cy="225" r="2" fill="#fff" stroke="none"/><ellipse cx="590" cy="242" rx="8" ry="6" fill="#F2A9C4" stroke-width="1.5"/><path d="M578,254 Q590,260 602,254" fill="none" stroke-width="2"/><ellipse cx="558" cy="234" rx="6" ry="10" fill="#F2A9C4"/><ellipse cx="622" cy="234" rx="6" ry="10" fill="#F2A9C4"/></g>
+    </g>
+    <g font-family="'IBM Plex Mono', monospace" font-size="13" fill="#8592AD">
+    <text data-target="#work" x="90" y="230" text-anchor="middle">ProjectIQ</text><text data-target="#assets" x="190" y="300" text-anchor="middle">PropertyIQ</text><text data-target="#protect" x="290" y="230" text-anchor="middle">AccidentIQ</text><text data-target="#spending" x="390" y="300" text-anchor="middle">PriceIQ</text><text data-target="#self" x="490" y="230" text-anchor="middle">Self</text><text data-target="#health" x="590" y="300" text-anchor="middle">HealthIQ</text>
+    </g></svg>`
+  ];
+
+  const chosen = mascotVariants[Math.floor(Math.random() * mascotVariants.length)];
+  const stripEl = document.getElementById('mascot-strip');
+  stripEl.innerHTML = chosen;
+
+  stripEl.addEventListener('click', (e) => {
+    const el = e.target.closest('[data-target]');
+    if (!el) return;
+    const target = document.querySelector(el.getAttribute('data-target'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
 </script>
 
 </body>
