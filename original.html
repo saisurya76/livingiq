@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LivingIQ — Applied intelligence for the decisions you live by</title>
+<meta name="description" content="LivingIQ is a family of applied-AI instruments — AccidentIQ, PropertyIQ, and more — built to assess and match the things citizens rely on every day.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0B1220;
+    --surface: #121A2B;
+    --surface-2: #17223A;
+    --line: #253048;
+    --text: #E7ECF5;
+    --muted: #8592AD;
+    --teal: #5EEAD4;
+    --amber: #F5B841;
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.wordmark{ font-family:'Space Grotesk', sans-serif; }
+  .mono{ font-family:'IBM Plex Mono', monospace; }
+  a{ color:inherit; text-decoration:none; }
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
+
+  /* NAV */
+  nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(11,18,32,0.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  nav .wrap{ display:flex; align-items:center; justify-content:space-between; height:64px; }
+  .wordmark{ font-size:1.15rem; font-weight:700; letter-spacing:-0.02em; display:flex; align-items:center; gap:8px; }
+  .wordmark .dot{ width:8px; height:8px; border-radius:50%; background:var(--teal); box-shadow:0 0 12px var(--teal); }
+  .navlinks{ display:flex; gap:28px; font-size:0.9rem; color:var(--muted); }
+  .navlinks a:hover{ color:var(--text); }
+  @media (max-width:640px){ .navlinks{ display:none; } }
+
+  /* HERO */
+  .hero{ padding:96px 0 72px; position:relative; overflow:hidden; }
+  .hero-grid{ display:grid; grid-template-columns:1.1fr 0.9fr; gap:48px; align-items:center; }
+  @media (max-width:860px){ .hero-grid{ grid-template-columns:1fr; } }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace; font-size:0.75rem; letter-spacing:0.12em;
+    color:var(--teal); text-transform:uppercase; margin-bottom:18px; display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{ content:''; width:22px; height:1px; background:var(--teal); }
+  .hero h1{ font-size:clamp(2.4rem, 5vw, 3.6rem); font-weight:700; letter-spacing:-0.02em; line-height:1.05; margin-bottom:22px; }
+  .hero h1 span{ color:var(--muted); }
+  .hero p.lead{ font-size:1.08rem; color:var(--muted); max-width:480px; margin-bottom:32px; }
+  .cta-row{ display:flex; gap:14px; flex-wrap:wrap; }
+  .btn{
+    display:inline-flex; align-items:center; gap:8px; padding:12px 22px; border-radius:8px;
+    font-size:0.92rem; font-weight:500; transition:all .18s ease; border:1px solid transparent;
+  }
+  .btn-primary{ background:var(--teal); color:#06231F; }
+  .btn-primary:hover{ background:#83f0dd; transform:translateY(-1px); }
+  .btn-ghost{ border-color:var(--line); color:var(--text); }
+  .btn-ghost:hover{ border-color:var(--muted); }
+
+  /* GAUGE SIGNATURE ELEMENT */
+  .gauge-card{
+    background:var(--surface); border:1px solid var(--line); border-radius:16px;
+    padding:32px; position:relative;
+  }
+  .gauge-label{ font-family:'IBM Plex Mono', monospace; font-size:0.72rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px; }
+  .gauge-value{ font-family:'IBM Plex Mono', monospace; font-size:1.6rem; color:var(--teal); font-weight:500; }
+  .gauge-sub{ font-size:0.85rem; color:var(--muted); margin-top:2px; }
+  svg#dial{ display:block; margin:18px auto 0; }
+  #needle{ transform-origin:150px 150px; transition:transform 1.1s cubic-bezier(.4,0,.2,1); }
+
+  /* SECTIONS */
+  section{ padding:64px 0; }
+  .section-head{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:36px; gap:20px; flex-wrap:wrap; }
+  .section-head h2{ font-size:1.6rem; font-weight:600; letter-spacing:-0.01em; }
+  .section-tag{ font-family:'IBM Plex Mono', monospace; font-size:0.75rem; color:var(--muted); border:1px solid var(--line); padding:4px 10px; border-radius:20px; }
+
+  .grid{ display:grid; grid-template-columns:repeat(2, 1fr); gap:20px; }
+  @media (max-width:720px){ .grid{ grid-template-columns:1fr; } }
+
+  .card{
+    background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:26px;
+    display:flex; flex-direction:column; gap:14px; transition:border-color .18s ease, transform .18s ease;
+  }
+  .card.live:hover{ border-color:var(--teal); transform:translateY(-2px); }
+  .card-top{ display:flex; align-items:center; justify-content:space-between; }
+  .card-name{ font-family:'Space Grotesk', sans-serif; font-size:1.15rem; font-weight:600; }
+  .verb-tag{
+    font-family:'IBM Plex Mono', monospace; font-size:0.68rem; letter-spacing:0.08em;
+    text-transform:uppercase; color:var(--muted); margin-top:-6px;
+  }
+  .status{ font-family:'IBM Plex Mono', monospace; font-size:0.68rem; letter-spacing:0.06em; padding:3px 9px; border-radius:20px; text-transform:uppercase; }
+  .status.live{ color:#06231F; background:var(--teal); }
+  .status.soon{ color:var(--muted); border:1px solid var(--line); }
+  .card p{ color:var(--muted); font-size:0.92rem; flex-grow:1; }
+  .card-link{ font-size:0.88rem; color:var(--teal); display:flex; align-items:center; gap:6px; }
+  .card.soon .card-link{ color:var(--muted); }
+
+  /* Smoked-glass treatment for unreleased products — visible but veiled */
+  .card.soon{
+    position:relative;
+    overflow:hidden;
+    background:
+      linear-gradient(160deg, rgba(23,34,58,0.9), rgba(18,26,43,0.96)),
+      var(--surface);
+  }
+  .card.soon .card-body{
+    position:relative;
+    z-index:0;
+  }
+  .card.soon .frost{
+    position:absolute; inset:0; z-index:1;
+    backdrop-filter: blur(9px) saturate(140%);
+    -webkit-backdrop-filter: blur(9px) saturate(140%);
+    background: rgba(18,26,43,0.42);
+  }
+  .card.soon::before{
+    /* smog haze */
+    content:'';
+    position:absolute; inset:0;
+    background: radial-gradient(120% 90% at 15% 0%, rgba(94,234,212,0.06), transparent 55%),
+                radial-gradient(100% 80% at 90% 100%, rgba(245,184,65,0.05), transparent 60%);
+    pointer-events:none;
+    z-index:0;
+  }
+  .card.soon::after{
+    /* glare sweep */
+    content:'';
+    position:absolute;
+    top:-50%; left:-60%;
+    width:40%; height:200%;
+    background:linear-gradient(75deg, transparent, rgba(231,236,245,0.14) 45%, rgba(231,236,245,0.22) 50%, rgba(231,236,245,0.14) 55%, transparent);
+    transform:rotate(8deg);
+    animation:glareSweep 6s ease-in-out infinite;
+    pointer-events:none;
+    z-index:2;
+  }
+  .card.soon .card-top{ padding-right:88px; }
+  .status.badge-float{
+    position:absolute; top:18px; right:18px; z-index:3;
+    backdrop-filter:blur(2px);
+    background:rgba(18,26,43,0.6);
+  }
+  @keyframes glareSweep{
+    0%   { left:-60%; }
+    45%  { left:130%; }
+    100% { left:130%; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .card.soon::after{ animation:none; opacity:0.5; }
+  }
+
+  /* FOUNDER */
+  .founder{ background:var(--surface); border:1px solid var(--line); border-radius:18px; padding:44px; display:grid; grid-template-columns:auto 1fr; gap:36px; align-items:center; }
+  @media (max-width:640px){ .founder{ grid-template-columns:1fr; text-align:center; } .founder .links{ justify-content:center; } }
+  .avatar{
+    width:104px; height:104px; border-radius:50%; background:linear-gradient(135deg, var(--teal), var(--amber));
+    display:flex; align-items:center; justify-content:center; font-family:'Space Grotesk',sans-serif; font-weight:700;
+    font-size:1.8rem; color:#06231F; flex-shrink:0;
+  }
+  /* To use a real photo instead of initials, replace the .avatar div content with:
+     <img src="assets/profile.jpg" alt="Surya" style="width:100%;height:100%;border-radius:50%;object-fit:cover;"> */
+  .founder h3{ font-size:1.25rem; margin-bottom:4px; }
+  .founder .role{ color:var(--teal); font-family:'IBM Plex Mono', monospace; font-size:0.8rem; margin-bottom:12px; }
+  .founder p{ color:var(--muted); font-size:0.95rem; max-width:560px; margin-bottom:16px; }
+  .links{ display:flex; gap:18px; flex-wrap:wrap; }
+  .links a{ font-size:0.88rem; color:var(--text); border-bottom:1px solid var(--line); padding-bottom:2px; }
+  .links a:hover{ border-color:var(--teal); color:var(--teal); }
+
+  footer{ border-top:1px solid var(--line); padding:36px 0; }
+  footer .wrap{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
+  footer p{ color:var(--muted); font-size:0.85rem; }
+  footer .roadmap-note{ font-family:'IBM Plex Mono', monospace; font-size:0.75rem; color:var(--amber); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="wordmark"><span class="dot"></span>LivingIQ</div>
+    <div class="navlinks">
+      <a href="#work">Work</a>
+      <a href="#assets">Assets</a>
+      <a href="#protect">Protect</a>
+      <a href="#spending">Spending</a>
+      <a href="#self">Self</a>
+      <a href="#health">Health</a>
+      <a href="#founder">Founder</a>
+      <a href="https://github.com/saisurya76" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">A family of applied-AI instruments</div>
+      <h1>Applied intelligence for the decisions <span>you live by.</span></h1>
+      <p class="lead">Every LivingIQ app answers one honest question: what is this actually worth, and does it actually fit? Built independently, read from one instrument panel.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#assess">See the apps ↓</a>
+        <a class="btn btn-ghost" href="#founder">About the founder</a>
+      </div>
+    </div>
+
+    <div class="gauge-card">
+      <div class="gauge-label" id="gauge-label">accidentiq — fault confidence</div>
+      <div class="gauge-value" id="gauge-value">87%</div>
+      <div class="gauge-sub" id="gauge-sub">Rear quarter-panel impact, moderate severity</div>
+      <svg id="dial" width="260" height="150" viewBox="0 0 300 170">
+        <path d="M 30 150 A 120 120 0 0 1 270 150" fill="none" stroke="#253048" stroke-width="14" stroke-linecap="round"/>
+        <path id="arc" d="M 30 150 A 120 120 0 0 1 270 150" fill="none" stroke="#5EEAD4" stroke-width="14" stroke-linecap="round" stroke-dasharray="377" stroke-dashoffset="60"/>
+        <line id="needle" x1="150" y1="150" x2="150" y2="50" stroke="#F5B841" stroke-width="3" stroke-linecap="round" transform="rotate(67 150 150)"/>
+        <circle cx="150" cy="150" r="7" fill="#E7ECF5"/>
+      </svg>
+    </div>
+  </div>
+</header>
+
+<section id="work">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Work</h2>
+      <div class="section-tag">is this actually the right move</div>
+    </div>
+    <div class="grid">
+      <div class="card live">
+        <div class="card-top"><div class="card-name">ProjectIQ</div><div class="status live">Live</div></div>
+        <div class="verb-tag">Assess</div>
+        <p>Single-screen analysis of any project — repo, zip, or description — producing an evidence-based report and execution plan for AI adoption and architectural transformation.</p>
+        <a class="card-link" href="https://projectiq.livingiqweb.com" target="_blank" rel="noopener">projectiq.livingiqweb.com →</a>
+      </div>
+      <div class="card soon">
+        <div class="status soon badge-float">Coming soon</div>
+        <div class="card-body">
+          <div class="card-top"><div class="card-name">SalaryIQ</div></div>
+          <div class="verb-tag">Assess</div>
+          <p>Compensation and appraisal benchmarking — know if your salary and raise are actually fair for your role and market.</p>
+          <span class="card-link">In planning</span>
+        </div>
+        <div class="frost"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="assets">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Assets</h2>
+      <div class="section-tag">what you own, and its real worth</div>
+    </div>
+    <div class="grid">
+      <div class="card live">
+        <div class="card-top"><div class="card-name">PropertyIQ</div><div class="status live">Live</div></div>
+        <div class="verb-tag">Assess</div>
+        <p>Pricing and security assessment for residential property, currently focused on Hyderabad, India.</p>
+        <a class="card-link" href="https://app.propertyiqweb.com" target="_blank" rel="noopener">app.propertyiqweb.com →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="protect">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Protect</h2>
+      <div class="section-tag">when something goes wrong</div>
+    </div>
+    <div class="grid">
+      <div class="card live">
+        <div class="card-top"><div class="card-name">AccidentIQ</div><div class="status live">Live</div></div>
+        <div class="verb-tag">Assess</div>
+        <p>Four-pass AI forensic pipeline for vehicle accidents — damage assessment, fault apportionment, terrain analysis, and cost/legal synthesis, with jurisdiction-aware pricing.</p>
+        <a class="card-link" href="https://accidentiqweb.com" target="_blank" rel="noopener">accidentiqweb.com →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="spending">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Spending</h2>
+      <div class="section-tag">is this actually a fair price</div>
+    </div>
+    <div class="grid">
+      <div class="card soon">
+        <div class="status soon badge-float">Coming soon</div>
+        <div class="card-body">
+          <div class="card-top"><div class="card-name">PriceIQ</div></div>
+          <div class="verb-tag">Assess</div>
+          <p>Product pricing assessment — is this actually a fair price, or a markup dressed up as a deal.</p>
+          <span class="card-link">In planning</span>
+        </div>
+        <div class="frost"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="self">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Self</h2>
+      <div class="section-tag">how you present, and what fits</div>
+    </div>
+    <div class="grid">
+      <div class="card soon">
+        <div class="status soon badge-float">Coming soon</div>
+        <div class="card-body">
+          <div class="card-top"><div class="card-name">StyleIQ</div></div>
+          <div class="verb-tag">Match</div>
+          <p>Clothing fit and match assessment — cut, proportion, and pairing suited to you, not a generic size chart.</p>
+          <span class="card-link">In planning</span>
+        </div>
+        <div class="frost"></div>
+      </div>
+      <div class="card soon">
+        <div class="status soon badge-float">Coming soon</div>
+        <div class="card-body">
+          <div class="card-top"><div class="card-name">SpecsIQ</div></div>
+          <div class="verb-tag">Match</div>
+          <p>Eyewear matching — frame shape and fit assessment against your face geometry and prescription.</p>
+          <span class="card-link">In planning</span>
+        </div>
+        <div class="frost"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="health">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Health</h2>
+      <div class="section-tag">on the roadmap</div>
+    </div>
+    <div class="grid">
+      <div class="card soon">
+        <div class="status soon badge-float">Planned</div>
+        <div class="card-body">
+          <div class="card-top"><div class="card-name">HealthIQ</div></div>
+          <div class="verb-tag">Assess</div>
+          <p>Not yet scoped — the intent is to bring the same evidence-based approach to personal health decisions.</p>
+          <span class="card-link">Not started</span>
+        </div>
+        <div class="frost"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="founder">
+  <div class="wrap">
+    <div class="founder">
+      <div class="avatar"><img src="assets/profile.jpg" alt="Surya" style="width:100%;height:100%;border-radius:50%;object-fit:cover;"></div>
+      <div>
+        <div class="role">Founder &amp; solo builder</div>
+        <h3>Surya</h3>
+        <p>Building LivingIQ end to end — product, AI pipelines, and infrastructure — as a solo entrepreneur, with Claude as primary build partner. Also active in open-source infrastructure tooling (IaC).</p>
+        <div class="links">
+          <a href="https://github.com/saisurya76" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://x.com/suryabuildsiq" target="_blank" rel="noopener">X / Twitter</a>
+          <a href="mailto:surya.builds.web@gmail.com">Email</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>© 2026 LivingIQ. An independent, solo-built product family.</p>
+    <div class="roadmap-note">→ one LivingIQ account, all apps — in progress</div>
+  </div>
+</footer>
+
+<script>
+  // Cycle the signature gauge through each product's characteristic metric
+  const readings = [
+    { label: "accidentiq — fault confidence", value: "87%", sub: "Rear quarter-panel impact, moderate severity", pct: 0.87 },
+    { label: "propertyiq — valuation confidence", value: "92%", sub: "Hyderabad, Gachibowli micro-market", pct: 0.92 },
+    { label: "projectiq — transformation readiness", value: "68%", sub: "Architecture fit for AI adoption", pct: 0.68 },
+    { label: "salaryiq — market percentile", value: "61%", sub: "Coming soon", pct: 0.61 },
+    { label: "priceiq — fair-price score", value: "74%", sub: "Coming soon", pct: 0.74 }
+  ];
+  let i = 0;
+  const labelEl = document.getElementById('gauge-label');
+  const valueEl = document.getElementById('gauge-value');
+  const subEl = document.getElementById('gauge-sub');
+  const needle = document.getElementById('needle');
+  const arc = document.getElementById('arc');
+  const arcLen = 377;
+
+  function render(r){
+    labelEl.textContent = r.label;
+    valueEl.textContent = r.value;
+    subEl.textContent = r.sub;
+    const angle = -90 + (r.pct * 180); // -90 (left) to +90 (right)
+    needle.setAttribute('transform', `rotate(${angle} 150 150)`);
+    arc.setAttribute('stroke-dashoffset', (1 - r.pct) * arcLen);
+  }
+  render(readings[0]);
+  setInterval(() => {
+    i = (i + 1) % readings.length;
+    render(readings[i]);
+  }, 3400);
+
+  // Respect reduced-motion preference
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    needle.style.transition = 'none';
+    arc.style.transition = 'none';
+  }
+</script>
+
+</body>
+</html>
