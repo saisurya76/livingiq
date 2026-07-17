@@ -263,15 +263,11 @@
         <p>Single-screen analysis of any project — repo, zip, or description — producing an evidence-based report and execution plan for AI adoption and architectural transformation.</p>
         <a class="card-link" href="https://projectiq.livingiqweb.com" target="_blank" rel="noopener">projectiq.livingiqweb.com →</a>
       </div>
-      <div class="card soon">
-        <div class="status soon badge-float">Coming soon</div>
-        <div class="card-body">
-          <div class="card-top"><div class="card-name-group"><div class="card-icon" data-icon="owl"></div><div class="card-name">SalaryIQ</div></div></div>
-          <div class="verb-tag">Assess</div>
-          <p>Compensation and appraisal benchmarking — know if your salary and raise are actually fair for your role and market.</p>
-          <span class="card-link">In planning</span>
-        </div>
-        <div class="frost"></div>
+      <div class="card live">
+        <div class="card-top"><div class="card-name-group"><div class="card-icon" data-icon="fox"></div><div class="card-name">DealIQ</div></div><div class="status live">Live</div></div>
+        <div class="verb-tag">Assess</div>
+        <p>Verify and assess whether a deal is actually good — job offers, business deals, and asset purchases — before you commit.</p>
+        <a class="card-link" href="https://auth.livingiqweb.com/login?redirect_to=https://dealiq.livingiqweb.com" target="_blank" rel="noopener">dealiq.livingiqweb.com →</a>
       </div>
     </div>
   </div>
@@ -483,12 +479,28 @@
       <path d="M590,246 Q590,252 596,254" fill="none" stroke-width="2"/>
       <path d="M574,264 Q590,272 606,264" fill="none" stroke-width="2"/>
       <path d="M590,196 Q582,186 590,178 Q598,186 590,196" fill="#F5B841" stroke-width="1.5"/>
+    </g></svg>`,
+    fox: `<svg viewBox="0 0 100 92"><g transform="translate(-42,-104)" stroke="#213347" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M56,108 L74,132 L44,134 Z" fill="#EE8F4E"/>
+      <path d="M124,108 L106,132 L136,134 Z" fill="#EE8F4E"/>
+      <path d="M58,114 L72,130 L50,130 Z" fill="#FDFBF4"/>
+      <path d="M122,114 L108,130 L130,130 Z" fill="#FDFBF4"/>
+      <ellipse cx="90" cy="152" rx="46" ry="42" fill="#EE8F4E"/>
+      <path d="M68,158 Q90,182 112,158 L112,172 Q90,192 68,172 Z" fill="#FDFBF4"/>
+      <circle cx="74" cy="148" r="10" fill="#FDFBF4" stroke-width="1.5"/>
+      <circle cx="106" cy="148" r="10" fill="#FDFBF4" stroke-width="1.5"/>
+      <circle cx="76" cy="150" r="4.5" fill="#213347" stroke="none"/>
+      <circle cx="108" cy="150" r="4.5" fill="#213347" stroke="none"/>
+      <path d="M85,166 L95,166 L90,174 Z" fill="#213347" stroke="none"/>
+      <circle cx="128" cy="176" r="9" fill="none" stroke="#F5B841" stroke-width="2"/>
+      <line x1="135" y1="183" x2="142" y2="190" stroke="#F5B841" stroke-width="2"/>
     </g></svg>`
   };
 
-  // One representative reading per section, cycling through the mascot family
+  // One representative reading per live/planned product, cycling through the mascot family
   const readings = [
     { icon: "owl",    label: "projectiq — transformation readiness", value: "68%", sub: "Architecture fit for AI adoption" },
+    { icon: "fox",    label: "dealiq — deal integrity score",        value: "81%", sub: "Job offer terms vs. market benchmark" },
     { icon: "turtle", label: "propertyiq — valuation confidence",    value: "92%", sub: "Hyderabad, Gachibowli micro-market" },
     { icon: "car",    label: "accidentiq — fault confidence",        value: "87%", sub: "Rear quarter-panel impact, moderate severity" },
     { icon: "piggy",  label: "priceiq — fair-price score",           value: "74%", sub: "Coming soon" },
@@ -540,7 +552,7 @@
     <g class="mascot-node" data-target="#health"><circle cx="590" cy="228" r="44" fill="#FDFBF4"/><path d="M556,196 L568,212 L548,214 Z" fill="#213347" stroke="none"/><path d="M624,196 L612,212 L632,214 Z" fill="#213347" stroke="none"/><ellipse cx="570" cy="224" rx="13" ry="16" fill="#213347" stroke="none"/><ellipse cx="610" cy="224" rx="13" ry="16" fill="#213347" stroke="none"/><circle cx="573" cy="222" r="3.5" fill="#FDFBF4" stroke="none"/><circle cx="613" cy="222" r="3.5" fill="#FDFBF4" stroke="none"/><path d="M584,240 L590,246 L596,240 Z" fill="#213347" stroke="none"/><path d="M590,246 Q590,252 596,254" fill="none" stroke-width="2"/><path d="M574,264 Q590,272 606,264" fill="none" stroke-width="2"/><path d="M590,196 Q582,186 590,178 Q598,186 590,196" fill="#F5B841" stroke-width="1.5"/></g>
     </g>
     <g font-family="'IBM Plex Mono', monospace" font-size="13" fill="#8592AD">
-    <text data-target="#work" x="90" y="230" text-anchor="middle">ProjectIQ</text><text data-target="#assets" x="190" y="300" text-anchor="middle">PropertyIQ</text><text data-target="#protect" x="290" y="230" text-anchor="middle">AccidentIQ</text><text data-target="#spending" x="390" y="300" text-anchor="middle">PriceIQ</text><text data-target="#self" x="490" y="230" text-anchor="middle">Self</text><text data-target="#health" x="590" y="300" text-anchor="middle">HealthIQ</text>
+    <text data-target="#work" x="90" y="230" text-anchor="middle">Work</text><text data-target="#assets" x="190" y="300" text-anchor="middle">Assets</text><text data-target="#protect" x="290" y="230" text-anchor="middle">Protect</text><text data-target="#spending" x="390" y="300" text-anchor="middle">Spending</text><text data-target="#self" x="490" y="230" text-anchor="middle">Self</text><text data-target="#health" x="590" y="300" text-anchor="middle">Health</text>
     </g></svg>`,
 
     // des2 — fully brand-recolored (navy/teal/amber only)
@@ -555,7 +567,7 @@
     <g class="mascot-node" data-target="#health"><circle cx="590" cy="228" r="44" fill="#E7ECF5"/><path d="M556,196 L568,212 L548,214 Z" fill="#0B1220" stroke="none"/><path d="M624,196 L612,212 L632,214 Z" fill="#0B1220" stroke="none"/><ellipse cx="570" cy="224" rx="13" ry="16" fill="#0B1220" stroke="none"/><ellipse cx="610" cy="224" rx="13" ry="16" fill="#0B1220" stroke="none"/><circle cx="573" cy="222" r="3.5" fill="#E7ECF5" stroke="none"/><circle cx="613" cy="222" r="3.5" fill="#E7ECF5" stroke="none"/><path d="M584,240 L590,246 L596,240 Z" fill="#0B1220" stroke="none"/><path d="M590,246 Q590,252 596,254" fill="none" stroke-width="2"/><path d="M574,264 Q590,272 606,264" fill="none" stroke-width="2"/><path d="M590,196 Q582,186 590,178 Q598,186 590,196" fill="#F5B841" stroke-width="1.5"/></g>
     </g>
     <g font-family="'IBM Plex Mono', monospace" font-size="13" fill="#8592AD">
-    <text data-target="#work" x="90" y="230" text-anchor="middle">ProjectIQ</text><text data-target="#assets" x="190" y="300" text-anchor="middle">PropertyIQ</text><text data-target="#protect" x="290" y="230" text-anchor="middle">AccidentIQ</text><text data-target="#spending" x="390" y="300" text-anchor="middle">PriceIQ</text><text data-target="#self" x="490" y="230" text-anchor="middle">Self</text><text data-target="#health" x="590" y="300" text-anchor="middle">HealthIQ</text>
+    <text data-target="#work" x="90" y="230" text-anchor="middle">Work</text><text data-target="#assets" x="190" y="300" text-anchor="middle">Assets</text><text data-target="#protect" x="290" y="230" text-anchor="middle">Protect</text><text data-target="#spending" x="390" y="300" text-anchor="middle">Spending</text><text data-target="#self" x="490" y="230" text-anchor="middle">Self</text><text data-target="#health" x="590" y="300" text-anchor="middle">Health</text>
     </g></svg>`,
 
     // des3 — bright saturated, different species
@@ -570,7 +582,7 @@
     <g class="mascot-node" data-target="#health"><ellipse cx="590" cy="232" rx="44" ry="38" fill="#FFFDF6"/><ellipse cx="590" cy="204" rx="16" ry="10" fill="#FFFDF6"/><circle cx="572" cy="228" r="6" fill="#3A2E1D" stroke="none"/><circle cx="608" cy="228" r="6" fill="#3A2E1D" stroke="none"/><circle cx="574" cy="225" r="2" fill="#fff" stroke="none"/><circle cx="610" cy="225" r="2" fill="#fff" stroke="none"/><ellipse cx="590" cy="242" rx="8" ry="6" fill="#F2A9C4" stroke-width="1.5"/><path d="M578,254 Q590,260 602,254" fill="none" stroke-width="2"/><ellipse cx="558" cy="234" rx="6" ry="10" fill="#F2A9C4"/><ellipse cx="622" cy="234" rx="6" ry="10" fill="#F2A9C4"/></g>
     </g>
     <g font-family="'IBM Plex Mono', monospace" font-size="13" fill="#8592AD">
-    <text data-target="#work" x="90" y="230" text-anchor="middle">ProjectIQ</text><text data-target="#assets" x="190" y="300" text-anchor="middle">PropertyIQ</text><text data-target="#protect" x="290" y="230" text-anchor="middle">AccidentIQ</text><text data-target="#spending" x="390" y="300" text-anchor="middle">PriceIQ</text><text data-target="#self" x="490" y="230" text-anchor="middle">Self</text><text data-target="#health" x="590" y="300" text-anchor="middle">HealthIQ</text>
+    <text data-target="#work" x="90" y="230" text-anchor="middle">Work</text><text data-target="#assets" x="190" y="300" text-anchor="middle">Assets</text><text data-target="#protect" x="290" y="230" text-anchor="middle">Protect</text><text data-target="#spending" x="390" y="300" text-anchor="middle">Spending</text><text data-target="#self" x="490" y="230" text-anchor="middle">Self</text><text data-target="#health" x="590" y="300" text-anchor="middle">Health</text>
     </g></svg>`
   ];
 
