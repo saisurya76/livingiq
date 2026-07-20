@@ -9,594 +9,546 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg: #0B1220;
-    --surface: #121A2B;
-    --surface-2: #17223A;
-    --line: #253048;
-    --text: #E7ECF5;
-    --muted: #8592AD;
-    --teal: #5EEAD4;
-    --amber: #F5B841;
-  }
-  *{ margin:0; padding:0; box-sizing:border-box; }
-  html{ scroll-behavior:smooth; }
-  body{
-    background:var(--bg);
-    color:var(--text);
-    font-family:'Inter', sans-serif;
-    line-height:1.5;
-    -webkit-font-smoothing:antialiased;
-  }
-  h1,h2,h3,.wordmark{ font-family:'Space Grotesk', sans-serif; }
-  .mono{ font-family:'IBM Plex Mono', monospace; }
-  a{ color:inherit; text-decoration:none; }
-  .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
-
-  /* NAV */
-  nav{
-    position:sticky; top:0; z-index:50;
-    background:rgba(11,18,32,0.85);
-    backdrop-filter:blur(10px);
-    border-bottom:1px solid var(--line);
-  }
-  nav .wrap{ display:flex; align-items:center; justify-content:space-between; height:64px; }
-  .wordmark{ font-size:1.15rem; font-weight:700; letter-spacing:-0.02em; display:flex; align-items:center; gap:8px; }
-  .wordmark .dot{ width:8px; height:8px; border-radius:50%; background:var(--teal); box-shadow:0 0 12px var(--teal); }
-  .navlinks{ display:flex; gap:28px; font-size:0.9rem; color:var(--muted); }
-  .navlinks a:hover{ color:var(--text); }
-  @media (max-width:640px){ .navlinks{ display:none; } }
-
-  /* HERO */
-  .hero{ padding:96px 0 72px; position:relative; overflow:hidden; }
-  .hero-grid{ display:grid; grid-template-columns:1.1fr 0.9fr; gap:48px; align-items:center; }
-  @media (max-width:860px){ .hero-grid{ grid-template-columns:1fr; } }
-  .eyebrow{
-    font-family:'IBM Plex Mono', monospace; font-size:0.75rem; letter-spacing:0.12em;
-    color:var(--teal); text-transform:uppercase; margin-bottom:18px; display:flex; align-items:center; gap:10px;
-  }
-  .eyebrow::before{ content:''; width:22px; height:1px; background:var(--teal); }
-  .hero h1{ font-size:clamp(2.4rem, 5vw, 3.6rem); font-weight:700; letter-spacing:-0.02em; line-height:1.05; margin-bottom:22px; }
-  .hero h1 span{ color:var(--muted); }
-  .hero p.lead{ font-size:1.08rem; color:var(--muted); max-width:480px; margin-bottom:32px; }
-  .cta-row{ display:flex; gap:14px; flex-wrap:wrap; }
-  .btn{
-    display:inline-flex; align-items:center; gap:8px; padding:12px 22px; border-radius:8px;
-    font-size:0.92rem; font-weight:500; transition:all .18s ease; border:1px solid transparent;
-  }
-  .btn-primary{ background:var(--teal); color:#06231F; }
-  .btn-primary:hover{ background:#83f0dd; transform:translateY(-1px); }
-  .btn-ghost{ border-color:var(--line); color:var(--text); }
-  .btn-ghost:hover{ border-color:var(--muted); }
-
-  /* GAUGE SIGNATURE ELEMENT */
-  .gauge-card{
-    background:var(--surface); border:1px solid var(--line); border-radius:16px;
-    padding:32px; position:relative;
-  }
-  .gauge-label{ font-family:'IBM Plex Mono', monospace; font-size:0.72rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px; }
-  .gauge-value{ font-family:'IBM Plex Mono', monospace; font-size:1.6rem; color:var(--teal); font-weight:500; }
-  .gauge-sub{ font-size:0.85rem; color:var(--muted); margin-top:2px; }
-  .mascot-stage{ width:150px; height:150px; margin:18px auto 0; display:flex; align-items:center; justify-content:center; }
-  .mascot-stage svg{ width:100%; height:100%; display:block; }
-  @keyframes mascotPop{
-    0%   { transform:scale(0.55) rotate(-10deg); opacity:0; }
-    65%  { transform:scale(1.1) rotate(4deg); opacity:1; }
-    100% { transform:scale(1) rotate(0deg); opacity:1; }
-  }
-  .mascot-pop{ animation:mascotPop 0.6s cubic-bezier(.34,1.56,.64,1); transform-origin:center; }
-  @media (prefers-reduced-motion: reduce){ .mascot-pop{ animation:none; } }
-
-  /* SECTIONS */
-  section{ padding:64px 0; }
-  .section-head{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:36px; gap:20px; flex-wrap:wrap; }
-  .section-head h2{ font-size:1.6rem; font-weight:600; letter-spacing:-0.01em; }
-  .section-tag{ font-family:'IBM Plex Mono', monospace; font-size:0.75rem; color:var(--muted); border:1px solid var(--line); padding:4px 10px; border-radius:20px; }
-
-  .grid{ display:grid; grid-template-columns:repeat(2, 1fr); gap:20px; }
-  @media (max-width:720px){ .grid{ grid-template-columns:1fr; } }
-
-  .card{
-    background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:26px;
-    display:flex; flex-direction:column; gap:14px; transition:border-color .18s ease, transform .18s ease;
-  }
-  .card.live:hover{ border-color:var(--teal); transform:translateY(-2px); }
-  .card-top{ display:flex; align-items:center; justify-content:space-between; }
-  .card-name{ font-family:'Space Grotesk', sans-serif; font-size:1.15rem; font-weight:600; }
-  .card-icon{ width:38px; height:38px; flex-shrink:0; margin-right:10px; }
-  .card-icon svg{ width:100%; height:100%; display:block; }
-  .card-name-group{ display:flex; align-items:center; }
-  .verb-tag{
-    font-family:'IBM Plex Mono', monospace; font-size:0.68rem; letter-spacing:0.08em;
-    text-transform:uppercase; color:var(--muted); margin-top:-6px;
-  }
-  .status{ font-family:'IBM Plex Mono', monospace; font-size:0.68rem; letter-spacing:0.06em; padding:3px 9px; border-radius:20px; text-transform:uppercase; }
-  .status.live{ color:#06231F; background:var(--teal); }
-  .status.soon{ color:var(--muted); border:1px solid var(--line); }
-  .card p{ color:var(--muted); font-size:0.92rem; flex-grow:1; }
-  .card-link{ font-size:0.88rem; color:var(--teal); display:flex; align-items:center; gap:6px; }
-  .card.soon .card-link{ color:var(--muted); }
-
-  /* Smoked-glass treatment for unreleased products — visible but veiled */
-  .card.soon{
-    position:relative;
-    overflow:hidden;
-    background:
-      linear-gradient(160deg, rgba(23,34,58,0.9), rgba(18,26,43,0.96)),
-      var(--surface);
-  }
-  .card.soon .card-body{
-    position:relative;
-    z-index:0;
-  }
-  .card.soon .frost{
-    position:absolute; inset:0; z-index:1;
-    backdrop-filter: blur(9px) saturate(140%);
-    -webkit-backdrop-filter: blur(9px) saturate(140%);
-    background: rgba(18,26,43,0.42);
-  }
-  .card.soon::before{
-    /* smog haze */
-    content:'';
-    position:absolute; inset:0;
-    background: radial-gradient(120% 90% at 15% 0%, rgba(94,234,212,0.06), transparent 55%),
-                radial-gradient(100% 80% at 90% 100%, rgba(245,184,65,0.05), transparent 60%);
-    pointer-events:none;
-    z-index:0;
-  }
-  .card.soon::after{
-    /* glare sweep */
-    content:'';
-    position:absolute;
-    top:-50%; left:-60%;
-    width:40%; height:200%;
-    background:linear-gradient(75deg, transparent, rgba(231,236,245,0.14) 45%, rgba(231,236,245,0.22) 50%, rgba(231,236,245,0.14) 55%, transparent);
-    transform:rotate(8deg);
-    animation:glareSweep 6s ease-in-out infinite;
-    pointer-events:none;
-    z-index:2;
-  }
-  .card.soon .card-top{ padding-right:88px; }
-  .status.badge-float{
-    position:absolute; top:18px; right:18px; z-index:3;
-    backdrop-filter:blur(2px);
-    background:rgba(18,26,43,0.6);
-  }
-  @keyframes glareSweep{
-    0%   { left:-60%; }
-    45%  { left:130%; }
-    100% { left:130%; }
-  }
-  @media (prefers-reduced-motion: reduce){
-    .card.soon::after{ animation:none; opacity:0.5; }
-  }
-
-  /* FOUNDER */
-  .founder{ background:var(--surface); border:1px solid var(--line); border-radius:18px; padding:44px; display:grid; grid-template-columns:auto 1fr; gap:36px; align-items:center; }
-  @media (max-width:640px){ .founder{ grid-template-columns:1fr; text-align:center; } .founder .links{ justify-content:center; } }
-  .avatar{
-    width:104px; height:104px; border-radius:50%; background:linear-gradient(135deg, var(--teal), var(--amber));
-    display:flex; align-items:center; justify-content:center; font-family:'Space Grotesk',sans-serif; font-weight:700;
-    font-size:1.8rem; color:#06231F; flex-shrink:0;
-  }
-  /* To use a real photo instead of initials, replace the .avatar div content with:
-     <img src="assets/profile.jpg" alt="Surya" style="width:100%;height:100%;border-radius:50%;object-fit:cover;"> */
-  .founder h3{ font-size:1.25rem; margin-bottom:4px; }
-  .founder .role{ color:var(--teal); font-family:'IBM Plex Mono', monospace; font-size:0.8rem; margin-bottom:12px; }
-  .founder p{ color:var(--muted); font-size:0.95rem; max-width:560px; margin-bottom:16px; }
-  .links{ display:flex; gap:18px; flex-wrap:wrap; }
-  .links a{ font-size:0.88rem; color:var(--text); border-bottom:1px solid var(--line); padding-bottom:2px; }
-  .links a:hover{ border-color:var(--teal); color:var(--teal); }
-
-  footer{ border-top:1px solid var(--line); padding:36px 0; }
-  footer .wrap{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
-  footer p{ color:var(--muted); font-size:0.85rem; }
-  footer .roadmap-note{ font-family:'IBM Plex Mono', monospace; font-size:0.75rem; color:var(--amber); }
-
-  #mascot-strip{ width:100%; }
-  #mascot-strip svg{ width:100%; height:auto; display:block; }
-  #mascot-strip [data-target]{ cursor:pointer; }
-  #mascot-strip .mascot-node{ transition: transform 0.2s ease; transform-origin:center; transform-box:fill-box; }
-  #mascot-strip .mascot-node:hover{ transform:scale(1.08) translateY(-3px); }
-  #mascot-strip text[data-target]:hover{ fill:var(--teal); }
+:root{
+--bg: #0B1220;
+--surface: #121A2B;
+--surface-2: #17223A;
+--line: #253048;
+--text: #E7ECF5;
+--muted: #8592AD;
+--teal: #5EEAD4;
+--amber: #F5B841;
+}
+*{ margin:0; padding:0; box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{
+background:var(--bg);
+color:var(--text);
+font-family:'Inter', sans-serif;
+line-height:1.5;
+-webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.wordmark{ font-family:'Space Grotesk', sans-serif; }
+.mono{ font-family:'IBM Plex Mono', monospace; }
+a{ color:inherit; text-decoration:none; }
+.wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
+/* NAV */
+nav{
+position:sticky; top:0; z-index:50;
+background:rgba(11,18,32,0.85);
+backdrop-filter:blur(10px);
+border-bottom:1px solid var(--line);
+}
+nav .wrap{ display:flex; align-items:center; justify-content:space-between; height:64px; }
+.wordmark{ font-size:1.15rem; font-weight:700; letter-spacing:-0.02em; display:flex; align-items:center; gap:8px; }
+.wordmark .dot{ width:8px; height:8px; border-radius:50%; background:var(--teal); box-shadow:0 0 12px var(--teal); }
+.navlinks{ display:flex; gap:28px; font-size:0.9rem; color:var(--muted); }
+.navlinks a:hover{ color:var(--text); }
+@media (max-width:640px){ .navlinks{ display:none; } }
+/* HERO */
+.hero{ padding:96px 0 72px; position:relative; overflow:hidden; }
+.hero-grid{ display:grid; grid-template-columns:1.1fr 0.9fr; gap:48px; align-items:center; }
+@media (max-width:860px){ .hero-grid{ grid-template-columns:1fr; } }
+.eyebrow{
+font-family:'IBM Plex Mono', monospace; font-size:0.75rem; letter-spacing:0.12em;
+color:var(--teal); text-transform:uppercase; margin-bottom:18px; display:flex; align-items:center; gap:10px;
+}
+.eyebrow::before{ content:''; width:22px; height:1px; background:var(--teal); }
+.hero h1{ font-size:clamp(2.4rem, 5vw, 3.6rem); font-weight:700; letter-spacing:-0.02em; line-height:1.05; margin-bottom:22px; }
+.hero h1 span{ color:var(--muted); }
+.hero p.lead{ font-size:1.08rem; color:var(--muted); max-width:480px; margin-bottom:32px; }
+.cta-row{ display:flex; gap:14px; flex-wrap:wrap; }
+.btn{
+display:inline-flex; align-items:center; gap:8px; padding:12px 22px; border-radius:8px;
+font-size:0.92rem; font-weight:500; transition:all .18s ease; border:1px solid transparent;
+}
+.btn-primary{ background:var(--teal); color:#06231F; }
+.btn-primary:hover{ background:#83f0dd; transform:translateY(-1px); }
+.btn-ghost{ border-color:var(--line); color:var(--text); }
+.btn-ghost:hover{ border-color:var(--muted); }
+/* GAUGE SIGNATURE ELEMENT */
+.gauge-card{
+background:var(--surface); border:1px solid var(--line); border-radius:16px;
+padding:32px; position:relative;
+}
+.gauge-label{ font-family:'IBM Plex Mono', monospace; font-size:0.72rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:4px; }
+.gauge-value{ font-family:'IBM Plex Mono', monospace; font-size:1.6rem; color:var(--teal); font-weight:500; }
+.gauge-sub{ font-size:0.85rem; color:var(--muted); margin-top:2px; }
+.mascot-stage{ width:150px; height:150px; margin:18px auto 0; display:flex; align-items:center; justify-content:center; }
+.mascot-stage svg{ width:100%; height:100%; display:block; }
+@keyframes mascotPop{
+0% { transform:scale(0.55) rotate(-10deg); opacity:0; }
+65% { transform:scale(1.1) rotate(4deg); opacity:1; }
+100% { transform:scale(1) rotate(0deg); opacity:1; }
+}
+.mascot-pop{ animation:mascotPop 0.6s cubic-bezier(.34,1.56,.64,1); transform-origin:center; }
+@media (prefers-reduced-motion: reduce){ .mascot-pop{ animation:none; } }
+/* SECTIONS */
+section{ padding:64px 0; }
+.section-head{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:36px; gap:20px; flex-wrap:wrap; }
+.section-head h2{ font-size:1.6rem; font-weight:600; letter-spacing:-0.01em; }
+.section-tag{ font-family:'IBM Plex Mono', monospace; font-size:0.75rem; color:var(--muted); border:1px solid var(--line); padding:4px 10px; border-radius:20px; }
+.grid{ display:grid; grid-template-columns:repeat(2, 1fr); gap:20px; }
+@media (max-width:720px){ .grid{ grid-template-columns:1fr; } }
+.card{
+background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:26px;
+display:flex; flex-direction:column; gap:14px; transition:border-color .18s ease, transform .18s ease;
+}
+.card.live:hover{ border-color:var(--teal); transform:translateY(-2px); }
+.card-top{ display:flex; align-items:center; justify-content:space-between; }
+.card-name{ font-family:'Space Grotesk', sans-serif; font-size:1.15rem; font-weight:600; }
+.card-icon{ width:38px; height:38px; flex-shrink:0; margin-right:10px; }
+.card-icon svg{ width:100%; height:100%; display:block; }
+.card-name-group{ display:flex; align-items:center; }
+.verb-tag{
+font-family:'IBM Plex Mono', monospace; font-size:0.68rem; letter-spacing:0.08em;
+text-transform:uppercase; color:var(--muted); margin-top:-6px;
+}
+.status{ font-family:'IBM Plex Mono', monospace; font-size:0.68rem; letter-spacing:0.06em; padding:3px 9px; border-radius:20px; text-transform:uppercase; }
+.status.live{ color:#06231F; background:var(--teal); }
+.status.beta{ color:var(--amber); border:1px solid var(--amber); margin-left:6px; }
+.status.soon{ color:var(--muted); border:1px solid var(--line); }
+.card p{ color:var(--muted); font-size:0.92rem; flex-grow:1; }
+.card-link{ font-size:0.88rem; color:var(--teal); display:flex; align-items:center; gap:6px; }
+.card.soon .card-link{ color:var(--muted); }
+/* Smoked-glass treatment for unreleased products — visible but veiled */
+.card.soon{
+position:relative;
+overflow:hidden;
+background:
+linear-gradient(160deg, rgba(23,34,58,0.9), rgba(18,26,43,0.96)),
+var(--surface);
+}
+.card.soon .card-body{
+position:relative;
+z-index:0;
+}
+.card.soon .frost{
+position:absolute; inset:0; z-index:1;
+backdrop-filter: blur(9px) saturate(140%);
+-webkit-backdrop-filter: blur(9px) saturate(140%);
+background: rgba(18,26,43,0.42);
+}
+.card.soon::before{
+/* smog haze */
+content:'';
+position:absolute; inset:0;
+background: radial-gradient(120% 90% at 15% 0%, rgba(94,234,212,0.06), transparent 55%),
+radial-gradient(100% 80% at 90% 100%, rgba(245,184,65,0.05), transparent 60%);
+pointer-events:none;
+z-index:0;
+}
+.card.soon::after{
+/* glare sweep */
+content:'';
+position:absolute;
+top:-50%; left:-60%;
+width:40%; height:200%;
+background:linear-gradient(75deg, transparent, rgba(231,236,245,0.14) 45%, rgba(231,236,245,0.22) 50%, rgba(231,236,245,0.14) 55%, transparent);
+transform:rotate(8deg);
+animation:glareSweep 6s ease-in-out infinite;
+pointer-events:none;
+z-index:2;
+}
+.card.soon .card-top{ padding-right:88px; }
+.status.badge-float{
+position:absolute; top:18px; right:18px; z-index:3;
+backdrop-filter:blur(2px);
+background:rgba(18,26,43,0.6);
+}
+@keyframes glareSweep{
+0% { left:-60%; }
+45% { left:130%; }
+100% { left:130%; }
+}
+@media (prefers-reduced-motion: reduce){
+.card.soon::after{ animation:none; opacity:0.5; }
+}
+/* FOUNDER */
+.founder{ background:var(--surface); border:1px solid var(--line); border-radius:18px; padding:44px; display:grid; grid-template-columns:auto 1fr; gap:36px; align-items:center; }
+@media (max-width:640px){ .founder{ grid-template-columns:1fr; text-align:center; } .founder .links{ justify-content:center; } }
+.avatar{
+width:104px; height:104px; border-radius:50%; background:linear-gradient(135deg, var(--teal), var(--amber));
+display:flex; align-items:center; justify-content:center; font-family:'Space Grotesk',sans-serif; font-weight:700;
+font-size:1.8rem; color:#06231F; flex-shrink:0;
+}
+/* To use a real photo instead of initials, replace the .avatar div content with:
+<img src="assets/profile.jpg" alt="Surya" style="width:100%;height:100%;border-radius:50%;object-fit:cover;"> */
+.founder h3{ font-size:1.25rem; margin-bottom:4px; }
+.founder .role{ color:var(--teal); font-family:'IBM Plex Mono', monospace; font-size:0.8rem; margin-bottom:12px; }
+.founder p{ color:var(--muted); font-size:0.95rem; max-width:560px; margin-bottom:16px; }
+.links{ display:flex; gap:18px; flex-wrap:wrap; }
+.links a{ font-size:0.88rem; color:var(--text); border-bottom:1px solid var(--line); padding-bottom:2px; }
+.links a:hover{ border-color:var(--teal); color:var(--teal); }
+footer{ border-top:1px solid var(--line); padding:36px 0; }
+footer .wrap{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
+footer p{ color:var(--muted); font-size:0.85rem; }
+footer .roadmap-note{ font-family:'IBM Plex Mono', monospace; font-size:0.75rem; color:var(--amber); }
+#mascot-strip{ width:100%; }
+#mascot-strip svg{ width:100%; height:auto; display:block; }
+#mascot-strip [data-target]{ cursor:pointer; }
+#mascot-strip .mascot-node{ transition: transform 0.2s ease; transform-origin:center; transform-box:fill-box; }
+#mascot-strip .mascot-node:hover{ transform:scale(1.08) translateY(-3px); }
+#mascot-strip text[data-target]:hover{ fill:var(--teal); }
 </style>
 </head>
 <body>
-
 <nav>
-  <div class="wrap">
-    <div class="wordmark"><span class="dot"></span>LivingIQ</div>
-    <div class="navlinks">
-      <a href="#work">Work</a>
-      <a href="#assets">Assets</a>
-      <a href="#protect">Protect</a>
-      <a href="#spending">Spending</a>
-      <a href="#self">Self</a>
-      <a href="#health">Health</a>
-      <a href="#founder">Founder</a>
-      <a href="https://github.com/saisurya76" target="_blank" rel="noopener">GitHub</a>
-    </div>
-  </div>
+<div class="wrap">
+<div class="wordmark"><span class="dot"></span>LivingIQ</div>
+<div class="navlinks">
+<a href="#work">Work</a>
+<a href="#assets">Assets</a>
+<a href="#protect">Protect</a>
+<a href="#spending">Spending</a>
+<a href="#self">Self</a>
+<a href="#health">Health</a>
+<a href="#founder">Founder</a>
+<a href="https://github.com/saisurya76" target="_blank" rel="noopener">GitHub</a>
+</div>
+</div>
 </nav>
-
 <header class="hero">
-  <div class="wrap hero-grid">
-    <div>
-      <div class="eyebrow">A family of applied-AI instruments</div>
-      <h1>Applied intelligence for the decisions <span>you live by.</span></h1>
-      <p class="lead">Every LivingIQ app answers one honest question: what is this actually worth, and does it actually fit? Built independently, read from one instrument panel.</p>
-      <div class="cta-row">
-        <a class="btn btn-primary" href="#assess">See the apps ↓</a>
-        <a class="btn btn-ghost" href="#founder">About the founder</a>
-      </div>
-    </div>
-
-    <div class="gauge-card">
-      <div class="gauge-label" id="gauge-label">accidentiq — fault confidence</div>
-      <div class="gauge-value" id="gauge-value">87%</div>
-      <div class="gauge-sub" id="gauge-sub">Rear quarter-panel impact, moderate severity</div>
-      <div class="mascot-stage" id="mascot-stage"></div>
-    </div>
-  </div>
+<div class="wrap hero-grid">
+<div>
+<div class="eyebrow">A family of applied-AI instruments</div>
+<h1>Applied intelligence for the decisions <span>you live by.</span></h1>
+<p class="lead">Every LivingIQ app answers one honest question: what is this actually worth, and does it actually fit? Built independently, read from one instrument panel.</p>
+<div class="cta-row">
+<a class="btn btn-primary" href="#assess">See the apps ↓</a>
+<a class="btn btn-ghost" href="#founder">About the founder</a>
+</div>
+</div>
+<div class="gauge-card">
+<div class="gauge-label" id="gauge-label">accidentiq — fault confidence</div>
+<div class="gauge-value" id="gauge-value">87%</div>
+<div class="gauge-sub" id="gauge-sub">Rear quarter-panel impact, moderate severity</div>
+<div class="mascot-stage" id="mascot-stage"></div>
+</div>
+</div>
 </header>
-
 <section id="family">
-  <div class="wrap">
-    <div class="section-head">
-      <h2>Meet the family</h2>
-      <div class="section-tag">one journey, six instruments</div>
-    </div>
-    <div id="mascot-strip"></div>
-  </div>
+<div class="wrap">
+<div class="section-head">
+<h2>Meet the family</h2>
+<div class="section-tag">one journey, six instruments</div>
+</div>
+<div id="mascot-strip"></div>
+</div>
 </section>
-
 <section id="work">
-  <div class="wrap">
-    <div class="section-head">
-      <h2>Work</h2>
-      <div class="section-tag">is this actually the right move</div>
-    </div>
-    <div class="grid">
-      <div class="card live">
-        <div class="card-top"><div class="card-name-group"><div class="card-icon" data-icon="owl"></div><div class="card-name">ProjectIQ</div></div><div class="status live">Live</div></div>
-        <div class="verb-tag">Assess</div>
-        <p>Single-screen analysis of any project — repo, zip, or description — producing an evidence-based report and execution plan for AI adoption and architectural transformation.</p>
-        <a class="card-link" href="https://projectiq.livingiqweb.com" target="_blank" rel="noopener">projectiq.livingiqweb.com →</a>
-      </div>
-      <div class="card live">
-        <div class="card-top"><div class="card-name-group"><div class="card-icon" data-icon="fox"></div><div class="card-name">DealIQ</div></div><div class="status live">Live</div></div>
-        <div class="verb-tag">Assess</div>
-        <p>Verify and assess whether a deal is actually good — job offers, business deals, and asset purchases — before you commit.</p>
-        <a class="card-link" href="https://auth.livingiqweb.com/login?redirect_to=https://dealiq.livingiqweb.com" target="_blank" rel="noopener">dealiq.livingiqweb.com →</a>
-      </div>
-    </div>
-  </div>
+<div class="wrap">
+<div class="section-head">
+<h2>Work</h2>
+<div class="section-tag">is this actually the right move</div>
+</div>
+<div class="grid">
+<div class="card live">
+<div class="card-top"><div class="card-name-group"><div class="card-icon" data-icon="owl"></div><div class="card-name">ProjectIQ</div></div><div class="status live">Live</div></div>
+<div class="verb-tag">Assess</div>
+<p>Single-screen analysis of any project — repo, zip, or description — producing an evidence-based report and execution plan for AI adoption and architectural transformation.</p>
+<a class="card-link" href="https://projectiq.livingiqweb.com" target="_blank" rel="noopener">projectiq.livingiqweb.com →</a>
+</div>
+<div class="card live">
+<div class="card-top"><div class="card-name-group"><div class="card-icon" data-icon="owl"></div><div class="card-name">DealIQ</div></div><div class="status live">Live</div><div class="status beta">Beta</div></div>
+<div class="verb-tag">Assess</div>
+<p>Verify and assess whether a deal is actually good — job offers, business deals, and asset purchases — before you commit.</p>
+<a class="card-link" href="https://auth.livingiqweb.com/login?redirect_to=https://dealiq.livingiqweb.com" target="_blank" rel="noopener">dealiq.livingiqweb.com →</a>
+</div>
+</div>
+</div>
 </section>
-
 <section id="assets">
-  <div class="wrap">
-    <div class="section-head">
-      <h2>Assets</h2>
-      <div class="section-tag">what you own, and its real worth</div>
-    </div>
-    <div class="grid">
-      <div class="card live">
-        <div class="card-top"><div class="card-name-group"><div class="card-icon" data-icon="turtle"></div><div class="card-name">PropertyIQ</div></div><div class="status live">Live</div></div>
-        <div class="verb-tag">Assess</div>
-        <p>Pricing and security assessment for residential property, currently focused on Hyderabad, India.</p>
-        <a class="card-link" href="https://app.propertyiqweb.com" target="_blank" rel="noopener">app.propertyiqweb.com →</a>
-      </div>
-    </div>
-  </div>
+<div class="wrap">
+<div class="section-head">
+<h2>Assets</h2>
+<div class="section-tag">what you own, and its real worth</div>
+</div>
+<div class="grid">
+<div class="card live">
+<div class="card-top"><div class="card-name-group"><div class="card-icon" data-icon="turtle"></div><div class="card-name">PropertyIQ</div></div><div class="status live">Live</div></div>
+<div class="verb-tag">Assess</div>
+<p>Pricing and security assessment for residential property, currently focused on Hyderabad, India.</p>
+<a class="card-link" href="https://app.propertyiqweb.com" target="_blank" rel="noopener">app.propertyiqweb.com →</a>
+</div>
+</div>
+</div>
 </section>
-
 <section id="protect">
-  <div class="wrap">
-    <div class="section-head">
-      <h2>Protect</h2>
-      <div class="section-tag">when something goes wrong</div>
-    </div>
-    <div class="grid">
-      <div class="card live">
-        <div class="card-top"><div class="card-name-group"><div class="card-icon" data-icon="car"></div><div class="card-name">AccidentIQ</div></div><div class="status live">Live</div></div>
-        <div class="verb-tag">Assess</div>
-        <p>Four-pass AI forensic pipeline for vehicle accidents — damage assessment, fault apportionment, terrain analysis, and cost/legal synthesis, with jurisdiction-aware pricing.</p>
-        <a class="card-link" href="https://accidentiqweb.com" target="_blank" rel="noopener">accidentiqweb.com →</a>
-      </div>
-    </div>
-  </div>
+<div class="wrap">
+<div class="section-head">
+<h2>Protect</h2>
+<div class="section-tag">when something goes wrong</div>
+</div>
+<div class="grid">
+<div class="card live">
+<div class="card-top"><div class="card-name-group"><div class="card-icon" data-icon="car"></div><div class="card-name">AccidentIQ</div></div><div class="status live">Live</div></div>
+<div class="verb-tag">Assess</div>
+<p>Four-pass AI forensic pipeline for vehicle accidents — damage assessment, fault apportionment, terrain analysis, and cost/legal synthesis, with jurisdiction-aware pricing.</p>
+<a class="card-link" href="https://accidentiqweb.com" target="_blank" rel="noopener">accidentiqweb.com →</a>
+</div>
+</div>
+</div>
 </section>
-
 <section id="spending">
-  <div class="wrap">
-    <div class="section-head">
-      <h2>Spending</h2>
-      <div class="section-tag">is this actually a fair price</div>
-    </div>
-    <div class="grid">
-      <div class="card soon">
-        <div class="status soon badge-float">Coming soon</div>
-        <div class="card-body">
-          <div class="card-top"><div class="card-name-group"><div class="card-icon" data-icon="piggy"></div><div class="card-name">PriceIQ</div></div></div>
-          <div class="verb-tag">Assess</div>
-          <p>Product pricing assessment — is this actually a fair price, or a markup dressed up as a deal.</p>
-          <span class="card-link">In planning</span>
-        </div>
-        <div class="frost"></div>
-      </div>
-    </div>
-  </div>
+<div class="wrap">
+<div class="section-head">
+<h2>Spending</h2>
+<div class="section-tag">is this actually a fair price</div>
+</div>
+<div class="grid">
+<div class="card soon">
+<div class="status soon badge-float">Coming soon</div>
+<div class="card-body">
+<div class="card-top"><div class="card-name-group"><div class="card-icon" data-icon="piggy"></div><div class="card-name">PriceIQ</div></div></div>
+<div class="verb-tag">Assess</div>
+<p>Product pricing assessment — is this actually a fair price, or a markup dressed up as a deal.</p>
+<span class="card-link">In planning</span>
+</div>
+<div class="frost"></div>
+</div>
+</div>
+</div>
 </section>
-
 <section id="self">
-  <div class="wrap">
-    <div class="section-head">
-      <h2>Self</h2>
-      <div class="section-tag">how you present, and what fits</div>
-    </div>
-    <div class="grid">
-      <div class="card soon">
-        <div class="status soon badge-float">Coming soon</div>
-        <div class="card-body">
-          <div class="card-top"><div class="card-name-group"><div class="card-icon" data-icon="cat"></div><div class="card-name">StyleIQ</div></div></div>
-          <div class="verb-tag">Match</div>
-          <p>Clothing fit and match assessment — cut, proportion, and pairing suited to you, not a generic size chart.</p>
-          <span class="card-link">In planning</span>
-        </div>
-        <div class="frost"></div>
-      </div>
-      <div class="card soon">
-        <div class="status soon badge-float">Coming soon</div>
-        <div class="card-body">
-          <div class="card-top"><div class="card-name-group"><div class="card-icon" data-icon="cat"></div><div class="card-name">SpecsIQ</div></div></div>
-          <div class="verb-tag">Match</div>
-          <p>Eyewear matching — frame shape and fit assessment against your face geometry and prescription.</p>
-          <span class="card-link">In planning</span>
-        </div>
-        <div class="frost"></div>
-      </div>
-    </div>
-  </div>
+<div class="wrap">
+<div class="section-head">
+<h2>Self</h2>
+<div class="section-tag">how you present, and what fits</div>
+</div>
+<div class="grid">
+<div class="card soon">
+<div class="status soon badge-float">Coming soon</div>
+<div class="card-body">
+<div class="card-top"><div class="card-name-group"><div class="card-icon" data-icon="cat"></div><div class="card-name">StyleIQ</div></div></div>
+<div class="verb-tag">Match</div>
+<p>Clothing fit and match assessment — cut, proportion, and pairing suited to you, not a generic size chart.</p>
+<span class="card-link">In planning</span>
+</div>
+<div class="frost"></div>
+</div>
+<div class="card soon">
+<div class="status soon badge-float">Coming soon</div>
+<div class="card-body">
+<div class="card-top"><div class="card-name-group"><div class="card-icon" data-icon="cat"></div><div class="card-name">SpecsIQ</div></div></div>
+<div class="verb-tag">Match</div>
+<p>Eyewear matching — frame shape and fit assessment against your face geometry and prescription.</p>
+<span class="card-link">In planning</span>
+</div>
+<div class="frost"></div>
+</div>
+</div>
+</div>
 </section>
-
 <section id="health">
-  <div class="wrap">
-    <div class="section-head">
-      <h2>Health</h2>
-      <div class="section-tag">on the roadmap</div>
-    </div>
-    <div class="grid">
-      <div class="card soon">
-        <div class="status soon badge-float">Planned</div>
-        <div class="card-body">
-          <div class="card-top"><div class="card-name-group"><div class="card-icon" data-icon="panda"></div><div class="card-name">HealthIQ</div></div></div>
-          <div class="verb-tag">Assess</div>
-          <p>Not yet scoped — the intent is to bring the same evidence-based approach to personal health decisions.</p>
-          <span class="card-link">Not started</span>
-        </div>
-        <div class="frost"></div>
-      </div>
-    </div>
-  </div>
+<div class="wrap">
+<div class="section-head">
+<h2>Health</h2>
+<div class="section-tag">on the roadmap</div>
+</div>
+<div class="grid">
+<div class="card soon">
+<div class="status soon badge-float">Planned</div>
+<div class="card-body">
+<div class="card-top"><div class="card-name-group"><div class="card-icon" data-icon="panda"></div><div class="card-name">HealthIQ</div></div></div>
+<div class="verb-tag">Assess</div>
+<p>Not yet scoped — the intent is to bring the same evidence-based approach to personal health decisions.</p>
+<span class="card-link">Not started</span>
+</div>
+<div class="frost"></div>
+</div>
+</div>
+</div>
 </section>
-
 <section id="founder">
-  <div class="wrap">
-    <div class="founder">
-      <div class="avatar"><img src="assets/profile.jpg" alt="Surya" style="width:100%;height:100%;border-radius:50%;object-fit:cover;"></div>
-      <div>
-        <div class="role">Founder &amp; solo builder</div>
-        <h3>Surya</h3>
-        <p>Building LivingIQ end to end — product, AI pipelines, and infrastructure — as a solo entrepreneur, with Claude as primary build partner. Also active in open-source infrastructure tooling (IaC).</p>
-        <div class="links">
-          <a href="https://github.com/saisurya76" target="_blank" rel="noopener">GitHub</a>
-          <a href="https://x.com/suryabuildsiq" target="_blank" rel="noopener">X / Twitter</a>
-          <a href="mailto:surya.builds.web@gmail.com">Email</a>
-        </div>
-      </div>
-    </div>
-  </div>
+<div class="wrap">
+<div class="founder">
+<div class="avatar"><img src="assets/profile.jpg" alt="Surya" style="width:100%;height:100%;border-radius:50%;object-fit:cover;"></div>
+<div>
+<div class="role">Founder &amp; solo builder</div>
+<h3>Surya</h3>
+<p>Building LivingIQ end to end — product, AI pipelines, and infrastructure — as a solo entrepreneur, with Claude as primary build partner. Also active in open-source infrastructure tooling (IaC).</p>
+<div class="links">
+<a href="https://github.com/saisurya76" target="_blank" rel="noopener">GitHub</a>
+<a href="https://x.com/suryabuildsiq" target="_blank" rel="noopener">X / Twitter</a>
+<a href="mailto:surya.builds.web@gmail.com">Email</a>
+</div>
+</div>
+</div>
+</div>
 </section>
-
 <footer>
-  <div class="wrap">
-    <p>© 2026 LivingIQ. An independent, solo-built product family.</p>
-    <div class="roadmap-note">→ one LivingIQ account, all apps — in progress</div>
-  </div>
+<div class="wrap">
+<p>© 2026 LivingIQ. An independent, solo-built product family.</p>
+<div class="roadmap-note">→ one LivingIQ account, all apps — in progress</div>
+</div>
 </footer>
-
 <script>
-  // Standalone mascot icons — same characters as the "Meet the family" strip,
-  // fixed to the des1 palette so each app has one stable icon identity
-  const ICONS = {
-    owl: `<svg viewBox="0 0 100 92"><g transform="translate(-42,-104)" stroke="#213347" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
-      <ellipse cx="90" cy="150" rx="46" ry="44" fill="#2FB89C"/>
-      <path d="M62,116 L74,132 L54,134 Z" fill="#2FB89C"/>
-      <path d="M118,116 L106,132 L126,134 Z" fill="#2FB89C"/>
-      <circle cx="72" cy="148" r="15" fill="#FDFBF4" stroke-width="1.5"/>
-      <circle cx="108" cy="148" r="15" fill="#FDFBF4" stroke-width="1.5"/>
-      <circle cx="74" cy="150" r="6" fill="#213347" stroke="none"/>
-      <circle cx="106" cy="150" r="6" fill="#213347" stroke="none"/>
-      <path d="M85,164 L95,164 L90,172 Z" fill="#F5B841" stroke-width="1.5"/>
-      <circle cx="128" cy="176" r="9" fill="none" stroke="#F5B841" stroke-width="2"/>
-      <line x1="135" y1="183" x2="142" y2="190" stroke="#F5B841" stroke-width="2"/>
-    </g></svg>`,
-    turtle: `<svg viewBox="0 0 96 76"><g transform="translate(-142,-180)" stroke="#213347" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
-      <ellipse cx="190" cy="228" rx="44" ry="36" fill="#8FC98A"/>
-      <path d="M160,204 L190,182 L220,204 Z" fill="#F5B841"/>
-      <circle cx="178" cy="222" r="5" fill="#213347" stroke="none"/>
-      <circle cx="202" cy="222" r="5" fill="#213347" stroke="none"/>
-      <path d="M180,236 Q190,242 200,236" fill="none" stroke-width="2"/>
-      <ellipse cx="152" cy="248" rx="8" ry="6" fill="#8FC98A"/>
-      <ellipse cx="228" cy="248" rx="8" ry="6" fill="#8FC98A"/>
-    </g></svg>`,
-    car: `<svg viewBox="0 0 88 72"><g transform="translate(-246,-120)" stroke="#213347" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
-      <rect x="248" y="132" width="84" height="46" rx="20" fill="#EE8266"/>
-      <circle cx="310" cy="180" r="10" fill="#3a3f4b"/>
-      <circle cx="270" cy="180" r="10" fill="#3a3f4b"/>
-      <circle cx="270" cy="150" r="10" fill="#FDFBF4" stroke-width="1.5"/>
-      <circle cx="310" cy="150" r="10" fill="#FDFBF4" stroke-width="1.5"/>
-      <circle cx="271" cy="151" r="4" fill="#213347" stroke="none"/>
-      <circle cx="311" cy="151" r="4" fill="#213347" stroke="none"/>
-      <rect x="278" y="132" width="24" height="10" rx="3" fill="#5EEAD4" transform="rotate(-18 290 137)" stroke-width="1.5"/>
-      <path d="M287,128 l3,6 -6,2 6,2 -3,6" fill="none" stroke="#F5B841" stroke-width="1.5"/>
-    </g></svg>`,
-    piggy: `<svg viewBox="0 0 116 80"><g transform="translate(-344,-188)" stroke="#213347" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
-      <ellipse cx="390" cy="228" rx="44" ry="38" fill="#F2A9C4"/>
-      <path d="M364,196 L376,206 L358,208 Z" fill="#F2A9C4"/>
-      <path d="M416,196 L404,206 L422,208 Z" fill="#F2A9C4"/>
-      <ellipse cx="390" cy="238" rx="16" ry="10" fill="#F2A9C4"/>
-      <circle cx="384" cy="238" r="2.5" fill="#213347" stroke="none"/>
-      <circle cx="396" cy="238" r="2.5" fill="#213347" stroke="none"/>
-      <circle cx="372" cy="216" r="4" fill="#213347" stroke="none"/>
-      <circle cx="408" cy="216" r="4" fill="#213347" stroke="none"/>
-      <rect x="382" y="190" width="16" height="4" rx="2" fill="#213347" stroke="none"/>
-      <path d="M424,238 Q432,238 430,228" fill="none" stroke-width="2"/>
-      <circle cx="446" cy="252" r="11" fill="#F5B841" stroke-width="1.5"/>
-      <text x="446" y="257" text-anchor="middle" font-size="11" fill="#213347" stroke="none" font-weight="500">$</text>
-    </g></svg>`,
-    cat: `<svg viewBox="0 0 88 78"><g transform="translate(-446,-114)" stroke="#213347" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
-      <circle cx="490" cy="150" r="42" fill="#B49CE0"/>
-      <path d="M462,116 L474,132 L454,132 Z" fill="#B49CE0"/>
-      <path d="M518,116 L506,132 L526,132 Z" fill="#B49CE0"/>
-      <ellipse cx="472" cy="150" rx="16" ry="11" fill="#213347" stroke-width="1.5"/>
-      <ellipse cx="508" cy="150" rx="16" ry="11" fill="#213347" stroke-width="1.5"/>
-      <line x1="488" y1="150" x2="492" y2="150" stroke="#5EEAD4" stroke-width="2"/>
-      <path d="M474,172 Q490,180 506,172" fill="none" stroke-width="2"/>
-      <ellipse cx="490" cy="184" rx="10" ry="6" fill="#F5B841" stroke-width="1.5"/>
-      <line x1="480" y1="184" x2="465" y2="180" stroke-width="1.5"/>
-      <line x1="500" y1="184" x2="515" y2="180" stroke-width="1.5"/>
-    </g></svg>`,
-    panda: `<svg viewBox="0 0 92 98"><g transform="translate(-544,-176)" stroke="#213347" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
-      <circle cx="590" cy="228" r="44" fill="#FDFBF4"/>
-      <path d="M556,196 L568,212 L548,214 Z" fill="#213347" stroke="none"/>
-      <path d="M624,196 L612,212 L632,214 Z" fill="#213347" stroke="none"/>
-      <ellipse cx="570" cy="224" rx="13" ry="16" fill="#213347" stroke="none"/>
-      <ellipse cx="610" cy="224" rx="13" ry="16" fill="#213347" stroke="none"/>
-      <circle cx="573" cy="222" r="3.5" fill="#FDFBF4" stroke="none"/>
-      <circle cx="613" cy="222" r="3.5" fill="#FDFBF4" stroke="none"/>
-      <path d="M584,240 L590,246 L596,240 Z" fill="#213347" stroke="none"/>
-      <path d="M590,246 Q590,252 596,254" fill="none" stroke-width="2"/>
-      <path d="M574,264 Q590,272 606,264" fill="none" stroke-width="2"/>
-      <path d="M590,196 Q582,186 590,178 Q598,186 590,196" fill="#F5B841" stroke-width="1.5"/>
-    </g></svg>`,
-    fox: `<svg viewBox="0 0 100 92"><g transform="translate(-42,-104)" stroke="#213347" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
-      <path d="M56,108 L74,132 L44,134 Z" fill="#EE8F4E"/>
-      <path d="M124,108 L106,132 L136,134 Z" fill="#EE8F4E"/>
-      <path d="M58,114 L72,130 L50,130 Z" fill="#FDFBF4"/>
-      <path d="M122,114 L108,130 L130,130 Z" fill="#FDFBF4"/>
-      <ellipse cx="90" cy="152" rx="46" ry="42" fill="#EE8F4E"/>
-      <path d="M68,158 Q90,182 112,158 L112,172 Q90,192 68,172 Z" fill="#FDFBF4"/>
-      <circle cx="74" cy="148" r="10" fill="#FDFBF4" stroke-width="1.5"/>
-      <circle cx="106" cy="148" r="10" fill="#FDFBF4" stroke-width="1.5"/>
-      <circle cx="76" cy="150" r="4.5" fill="#213347" stroke="none"/>
-      <circle cx="108" cy="150" r="4.5" fill="#213347" stroke="none"/>
-      <path d="M85,166 L95,166 L90,174 Z" fill="#213347" stroke="none"/>
-      <circle cx="128" cy="176" r="9" fill="none" stroke="#F5B841" stroke-width="2"/>
-      <line x1="135" y1="183" x2="142" y2="190" stroke="#F5B841" stroke-width="2"/>
-    </g></svg>`
-  };
-
-  // One representative reading per live/planned product, cycling through the mascot family
-  const readings = [
-    { icon: "owl",    label: "projectiq — transformation readiness", value: "68%", sub: "Architecture fit for AI adoption" },
-    { icon: "fox",    label: "dealiq — deal integrity score",        value: "81%", sub: "Job offer terms vs. market benchmark" },
-    { icon: "turtle", label: "propertyiq — valuation confidence",    value: "92%", sub: "Hyderabad, Gachibowli micro-market" },
-    { icon: "car",    label: "accidentiq — fault confidence",        value: "87%", sub: "Rear quarter-panel impact, moderate severity" },
-    { icon: "piggy",  label: "priceiq — fair-price score",           value: "74%", sub: "Coming soon" },
-    { icon: "cat",    label: "self — fit confidence",                value: "61%", sub: "Coming soon" },
-    { icon: "panda",  label: "healthiq — readiness",                 value: "—",   sub: "Not yet scoped" }
-  ];
-
-  let i = 0;
-  const labelEl = document.getElementById('gauge-label');
-  const valueEl = document.getElementById('gauge-value');
-  const subEl = document.getElementById('gauge-sub');
-  const stage = document.getElementById('mascot-stage');
-
-  // Fill each product card's small icon badge from the same ICONS map
-  document.querySelectorAll('.card-icon[data-icon]').forEach(el => {
-    el.innerHTML = ICONS[el.dataset.icon] || '';
-  });
-
-  function render(r){
-    labelEl.textContent = r.label;
-    valueEl.textContent = r.value;
-    subEl.textContent = r.sub;
-    stage.innerHTML = ICONS[r.icon];
-    const svgEl = stage.querySelector('svg');
-    if (svgEl) {
-      svgEl.classList.remove('mascot-pop');
-      void svgEl.offsetWidth; // restart animation
-      svgEl.classList.add('mascot-pop');
-    }
-  }
-  render(readings[0]);
-  setInterval(() => {
-    i = (i + 1) % readings.length;
-    render(readings[i]);
-  }, 3400);
+// Standalone mascot icons — same characters as the "Meet the family" strip,
+// fixed to the des1 palette so each app has one stable icon identity
+const ICONS = {
+owl: `<svg viewBox="0 0 100 92"><g transform="translate(-42,-104)" stroke="#213347" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+<ellipse cx="90" cy="150" rx="46" ry="44" fill="#2FB89C"/>
+<path d="M62,116 L74,132 L54,134 Z" fill="#2FB89C"/>
+<path d="M118,116 L106,132 L126,134 Z" fill="#2FB89C"/>
+<circle cx="72" cy="148" r="15" fill="#FDFBF4" stroke-width="1.5"/>
+<circle cx="108" cy="148" r="15" fill="#FDFBF4" stroke-width="1.5"/>
+<circle cx="74" cy="150" r="6" fill="#213347" stroke="none"/>
+<circle cx="106" cy="150" r="6" fill="#213347" stroke="none"/>
+<path d="M85,164 L95,164 L90,172 Z" fill="#F5B841" stroke-width="1.5"/>
+<circle cx="128" cy="176" r="9" fill="none" stroke="#F5B841" stroke-width="2"/>
+<line x1="135" y1="183" x2="142" y2="190" stroke="#F5B841" stroke-width="2"/>
+</g></svg>`,
+turtle: `<svg viewBox="0 0 96 76"><g transform="translate(-142,-180)" stroke="#213347" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+<ellipse cx="190" cy="228" rx="44" ry="36" fill="#8FC98A"/>
+<path d="M160,204 L190,182 L220,204 Z" fill="#F5B841"/>
+<circle cx="178" cy="222" r="5" fill="#213347" stroke="none"/>
+<circle cx="202" cy="222" r="5" fill="#213347" stroke="none"/>
+<path d="M180,236 Q190,242 200,236" fill="none" stroke-width="2"/>
+<ellipse cx="152" cy="248" rx="8" ry="6" fill="#8FC98A"/>
+<ellipse cx="228" cy="248" rx="8" ry="6" fill="#8FC98A"/>
+</g></svg>`,
+car: `<svg viewBox="0 0 88 72"><g transform="translate(-246,-120)" stroke="#213347" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+<rect x="248" y="132" width="84" height="46" rx="20" fill="#EE8266"/>
+<circle cx="310" cy="180" r="10" fill="#3a3f4b"/>
+<circle cx="270" cy="180" r="10" fill="#3a3f4b"/>
+<circle cx="270" cy="150" r="10" fill="#FDFBF4" stroke-width="1.5"/>
+<circle cx="310" cy="150" r="10" fill="#FDFBF4" stroke-width="1.5"/>
+<circle cx="271" cy="151" r="4" fill="#213347" stroke="none"/>
+<circle cx="311" cy="151" r="4" fill="#213347" stroke="none"/>
+<rect x="278" y="132" width="24" height="10" rx="3" fill="#5EEAD4" transform="rotate(-18 290 137)" stroke-width="1.5"/>
+<path d="M287,128 l3,6 -6,2 6,2 -3,6" fill="none" stroke="#F5B841" stroke-width="1.5"/>
+</g></svg>`,
+piggy: `<svg viewBox="0 0 116 80"><g transform="translate(-344,-188)" stroke="#213347" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+<ellipse cx="390" cy="228" rx="44" ry="38" fill="#F2A9C4"/>
+<path d="M364,196 L376,206 L358,208 Z" fill="#F2A9C4"/>
+<path d="M416,196 L404,206 L422,208 Z" fill="#F2A9C4"/>
+<ellipse cx="390" cy="238" rx="16" ry="10" fill="#F2A9C4"/>
+<circle cx="384" cy="238" r="2.5" fill="#213347" stroke="none"/>
+<circle cx="396" cy="238" r="2.5" fill="#213347" stroke="none"/>
+<circle cx="372" cy="216" r="4" fill="#213347" stroke="none"/>
+<circle cx="408" cy="216" r="4" fill="#213347" stroke="none"/>
+<rect x="382" y="190" width="16" height="4" rx="2" fill="#213347" stroke="none"/>
+<path d="M424,238 Q432,238 430,228" fill="none" stroke-width="2"/>
+<circle cx="446" cy="252" r="11" fill="#F5B841" stroke-width="1.5"/>
+<text x="446" y="257" text-anchor="middle" font-size="11" fill="#213347" stroke="none" font-weight="500">$</text>
+</g></svg>`,
+cat: `<svg viewBox="0 0 88 78"><g transform="translate(-446,-114)" stroke="#213347" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+<circle cx="490" cy="150" r="42" fill="#B49CE0"/>
+<path d="M462,116 L474,132 L454,132 Z" fill="#B49CE0"/>
+<path d="M518,116 L506,132 L526,132 Z" fill="#B49CE0"/>
+<ellipse cx="472" cy="150" rx="16" ry="11" fill="#213347" stroke-width="1.5"/>
+<ellipse cx="508" cy="150" rx="16" ry="11" fill="#213347" stroke-width="1.5"/>
+<line x1="488" y1="150" x2="492" y2="150" stroke="#5EEAD4" stroke-width="2"/>
+<path d="M474,172 Q490,180 506,172" fill="none" stroke-width="2"/>
+<ellipse cx="490" cy="184" rx="10" ry="6" fill="#F5B841" stroke-width="1.5"/>
+<line x1="480" y1="184" x2="465" y2="180" stroke-width="1.5"/>
+<line x1="500" y1="184" x2="515" y2="180" stroke-width="1.5"/>
+</g></svg>`,
+panda: `<svg viewBox="0 0 92 98"><g transform="translate(-544,-176)" stroke="#213347" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+<circle cx="590" cy="228" r="44" fill="#FDFBF4"/>
+<path d="M556,196 L568,212 L548,214 Z" fill="#213347" stroke="none"/>
+<path d="M624,196 L612,212 L632,214 Z" fill="#213347" stroke="none"/>
+<ellipse cx="570" cy="224" rx="13" ry="16" fill="#213347" stroke="none"/>
+<ellipse cx="610" cy="224" rx="13" ry="16" fill="#213347" stroke="none"/>
+<circle cx="573" cy="222" r="3.5" fill="#FDFBF4" stroke="none"/>
+<circle cx="613" cy="222" r="3.5" fill="#FDFBF4" stroke="none"/>
+<path d="M584,240 L590,246 L596,240 Z" fill="#213347" stroke="none"/>
+<path d="M590,246 Q590,252 596,254" fill="none" stroke-width="2"/>
+<path d="M574,264 Q590,272 606,264" fill="none" stroke-width="2"/>
+<path d="M590,196 Q582,186 590,178 Q598,186 590,196" fill="#F5B841" stroke-width="1.5"/>
+</g></svg>`
+};
+// One representative reading per section, cycling through the mascot family
+const readings = [
+{ icon: "owl", label: "projectiq — transformation readiness", value: "68%", sub: "Architecture fit for AI adoption" },
+{ icon: "turtle", label: "propertyiq — valuation confidence", value: "92%", sub: "Hyderabad, Gachibowli micro-market" },
+{ icon: "car", label: "accidentiq — fault confidence", value: "87%", sub: "Rear quarter-panel impact, moderate severity" },
+{ icon: "piggy", label: "priceiq — fair-price score", value: "74%", sub: "Coming soon" },
+{ icon: "cat", label: "self — fit confidence", value: "61%", sub: "Coming soon" },
+{ icon: "panda", label: "healthiq — readiness", value: "—", sub: "Not yet scoped" }
+];
+let i = 0;
+const labelEl = document.getElementById('gauge-label');
+const valueEl = document.getElementById('gauge-value');
+const subEl = document.getElementById('gauge-sub');
+const stage = document.getElementById('mascot-stage');
+// Fill each product card's small icon badge from the same ICONS map
+document.querySelectorAll('.card-icon[data-icon]').forEach(el => {
+el.innerHTML = ICONS[el.dataset.icon] || '';
+});
+function render(r){
+labelEl.textContent = r.label;
+valueEl.textContent = r.value;
+subEl.textContent = r.sub;
+stage.innerHTML = ICONS[r.icon];
+const svgEl = stage.querySelector('svg');
+if (svgEl) {
+svgEl.classList.remove('mascot-pop');
+void svgEl.offsetWidth; // restart animation
+svgEl.classList.add('mascot-pop');
+}
+}
+render(readings[0]);
+setInterval(() => {
+i = (i + 1) % readings.length;
+render(readings[i]);
+}, 3400);
 </script>
-
 <script>
-  const mascotVariants = [
-    // des1 — pastel bodies, unified teal/amber accents
-    `<svg viewBox="0 0 680 340" role="img"><title>LivingIQ mascots</title><desc>Six mascots representing Work, Assets, Protect, Spending, Self, and Health.</desc>
-    <path d="M90,150 C140,150 140,220 190,220 C240,220 240,150 290,150 C340,150 340,220 390,220 C440,220 440,150 490,150 C540,150 540,220 590,220" fill="none" stroke="#5EEAD4" stroke-width="2" stroke-dasharray="7 7" opacity="0.55"/>
-    <g stroke="#213347" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
-    <g class="mascot-node" data-target="#work"><ellipse cx="90" cy="150" rx="46" ry="44" fill="#2FB89C"/><path d="M62,116 L74,132 L54,134 Z" fill="#2FB89C"/><path d="M118,116 L106,132 L126,134 Z" fill="#2FB89C"/><circle cx="72" cy="148" r="15" fill="#FDFBF4" stroke-width="1.5"/><circle cx="108" cy="148" r="15" fill="#FDFBF4" stroke-width="1.5"/><circle cx="74" cy="150" r="6" fill="#213347" stroke="none"/><circle cx="106" cy="150" r="6" fill="#213347" stroke="none"/><path d="M85,164 L95,164 L90,172 Z" fill="#F5B841" stroke-width="1.5"/><circle cx="128" cy="176" r="9" fill="none" stroke="#F5B841" stroke-width="2"/><line x1="135" y1="183" x2="142" y2="190" stroke="#F5B841" stroke-width="2"/></g>
-    <g class="mascot-node" data-target="#assets"><ellipse cx="190" cy="228" rx="44" ry="36" fill="#8FC98A"/><path d="M160,204 L190,182 L220,204 Z" fill="#F5B841"/><circle cx="178" cy="222" r="5" fill="#213347" stroke="none"/><circle cx="202" cy="222" r="5" fill="#213347" stroke="none"/><path d="M180,236 Q190,242 200,236" fill="none" stroke-width="2"/><ellipse cx="152" cy="248" rx="8" ry="6" fill="#8FC98A"/><ellipse cx="228" cy="248" rx="8" ry="6" fill="#8FC98A"/></g>
-    <g class="mascot-node" data-target="#protect"><rect x="248" y="132" width="84" height="46" rx="20" fill="#EE8266"/><circle cx="310" cy="180" r="10" fill="#3a3f4b"/><circle cx="270" cy="180" r="10" fill="#3a3f4b"/><circle cx="270" cy="150" r="10" fill="#FDFBF4" stroke-width="1.5"/><circle cx="310" cy="150" r="10" fill="#FDFBF4" stroke-width="1.5"/><circle cx="271" cy="151" r="4" fill="#213347" stroke="none"/><circle cx="311" cy="151" r="4" fill="#213347" stroke="none"/><rect x="278" y="132" width="24" height="10" rx="3" fill="#5EEAD4" transform="rotate(-18 290 137)" stroke-width="1.5"/><path d="M287,128 l3,6 -6,2 6,2 -3,6" fill="none" stroke="#F5B841" stroke-width="1.5"/></g>
-    <g class="mascot-node" data-target="#spending"><ellipse cx="390" cy="228" rx="44" ry="38" fill="#F2A9C4"/><path d="M364,196 L376,206 L358,208 Z" fill="#F2A9C4"/><path d="M416,196 L404,206 L422,208 Z" fill="#F2A9C4"/><ellipse cx="390" cy="238" rx="16" ry="10" fill="#F2A9C4"/><circle cx="384" cy="238" r="2.5" fill="#213347" stroke="none"/><circle cx="396" cy="238" r="2.5" fill="#213347" stroke="none"/><circle cx="372" cy="216" r="4" fill="#213347" stroke="none"/><circle cx="408" cy="216" r="4" fill="#213347" stroke="none"/><rect x="382" y="190" width="16" height="4" rx="2" fill="#213347" stroke="none"/><path d="M424,238 Q432,238 430,228" fill="none" stroke-width="2"/><circle cx="446" cy="252" r="11" fill="#F5B841" stroke-width="1.5"/><text x="446" y="257" text-anchor="middle" font-size="11" fill="#213347" stroke="none" font-weight="500">$</text></g>
-    <g class="mascot-node" data-target="#self"><circle cx="490" cy="150" r="42" fill="#B49CE0"/><path d="M462,116 L474,132 L454,132 Z" fill="#B49CE0"/><path d="M518,116 L506,132 L526,132 Z" fill="#B49CE0"/><ellipse cx="472" cy="150" rx="16" ry="11" fill="#213347" stroke-width="1.5"/><ellipse cx="508" cy="150" rx="16" ry="11" fill="#213347" stroke-width="1.5"/><line x1="488" y1="150" x2="492" y2="150" stroke="#5EEAD4" stroke-width="2"/><path d="M474,172 Q490,180 506,172" fill="none" stroke-width="2"/><ellipse cx="490" cy="184" rx="10" ry="6" fill="#F5B841" stroke-width="1.5"/><line x1="480" y1="184" x2="465" y2="180" stroke-width="1.5"/><line x1="500" y1="184" x2="515" y2="180" stroke-width="1.5"/></g>
-    <g class="mascot-node" data-target="#health"><circle cx="590" cy="228" r="44" fill="#FDFBF4"/><path d="M556,196 L568,212 L548,214 Z" fill="#213347" stroke="none"/><path d="M624,196 L612,212 L632,214 Z" fill="#213347" stroke="none"/><ellipse cx="570" cy="224" rx="13" ry="16" fill="#213347" stroke="none"/><ellipse cx="610" cy="224" rx="13" ry="16" fill="#213347" stroke="none"/><circle cx="573" cy="222" r="3.5" fill="#FDFBF4" stroke="none"/><circle cx="613" cy="222" r="3.5" fill="#FDFBF4" stroke="none"/><path d="M584,240 L590,246 L596,240 Z" fill="#213347" stroke="none"/><path d="M590,246 Q590,252 596,254" fill="none" stroke-width="2"/><path d="M574,264 Q590,272 606,264" fill="none" stroke-width="2"/><path d="M590,196 Q582,186 590,178 Q598,186 590,196" fill="#F5B841" stroke-width="1.5"/></g>
-    </g>
-    <g font-family="'IBM Plex Mono', monospace" font-size="13" fill="#8592AD">
-    <text data-target="#work" x="90" y="230" text-anchor="middle">Work</text><text data-target="#assets" x="190" y="300" text-anchor="middle">Assets</text><text data-target="#protect" x="290" y="230" text-anchor="middle">Protect</text><text data-target="#spending" x="390" y="300" text-anchor="middle">Spending</text><text data-target="#self" x="490" y="230" text-anchor="middle">Self</text><text data-target="#health" x="590" y="300" text-anchor="middle">Health</text>
-    </g></svg>`,
-
-    // des2 — fully brand-recolored (navy/teal/amber only)
-    `<svg viewBox="0 0 680 340" role="img"><title>LivingIQ mascots</title><desc>Six mascots representing Work, Assets, Protect, Spending, Self, and Health, in navy, teal, and amber.</desc>
-    <path d="M90,150 C140,150 140,220 190,220 C240,220 240,150 290,150 C340,150 340,220 390,220 C440,220 440,150 490,150 C540,150 540,220 590,220" fill="none" stroke="#5EEAD4" stroke-width="2" stroke-dasharray="7 7" opacity="0.5"/>
-    <g stroke="#0B1220" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
-    <g class="mascot-node" data-target="#work"><ellipse cx="90" cy="150" rx="46" ry="44" fill="#0F6E56"/><path d="M62,116 L74,132 L54,134 Z" fill="#0F6E56"/><path d="M118,116 L106,132 L126,134 Z" fill="#0F6E56"/><circle cx="72" cy="148" r="15" fill="#E7ECF5" stroke-width="1.5"/><circle cx="108" cy="148" r="15" fill="#E7ECF5" stroke-width="1.5"/><circle cx="74" cy="150" r="6" fill="#0B1220" stroke="none"/><circle cx="106" cy="150" r="6" fill="#0B1220" stroke="none"/><path d="M85,164 L95,164 L90,172 Z" fill="#F5B841" stroke-width="1.5"/><circle cx="128" cy="176" r="9" fill="none" stroke-width="2"/><line x1="135" y1="183" x2="142" y2="190" stroke-width="2"/></g>
-    <g class="mascot-node" data-target="#assets"><ellipse cx="190" cy="228" rx="44" ry="36" fill="#1D9E75"/><path d="M160,204 L190,182 L220,204 Z" fill="#F5B841"/><circle cx="178" cy="222" r="5" fill="#0B1220" stroke="none"/><circle cx="202" cy="222" r="5" fill="#0B1220" stroke="none"/><path d="M180,236 Q190,242 200,236" fill="none" stroke-width="2"/><ellipse cx="152" cy="248" rx="8" ry="6" fill="#1D9E75"/><ellipse cx="228" cy="248" rx="8" ry="6" fill="#1D9E75"/></g>
-    <g class="mascot-node" data-target="#protect"><rect x="248" y="132" width="84" height="46" rx="20" fill="#17223A"/><circle cx="310" cy="180" r="10" fill="#5EEAD4"/><circle cx="270" cy="180" r="10" fill="#5EEAD4"/><circle cx="270" cy="150" r="10" fill="#E7ECF5" stroke-width="1.5"/><circle cx="310" cy="150" r="10" fill="#E7ECF5" stroke-width="1.5"/><circle cx="271" cy="151" r="4" fill="#0B1220" stroke="none"/><circle cx="311" cy="151" r="4" fill="#0B1220" stroke="none"/><rect x="278" y="132" width="24" height="10" rx="3" fill="#E7ECF5" transform="rotate(-18 290 137)" stroke-width="1.5"/><path d="M287,128 l3,6 -6,2 6,2 -3,6" fill="none" stroke="#F5B841" stroke-width="1.5"/></g>
-    <g class="mascot-node" data-target="#spending"><ellipse cx="390" cy="228" rx="44" ry="38" fill="#5EEAD4"/><path d="M364,196 L376,206 L358,208 Z" fill="#5EEAD4"/><path d="M416,196 L404,206 L422,208 Z" fill="#5EEAD4"/><ellipse cx="390" cy="238" rx="16" ry="10" fill="#5EEAD4"/><circle cx="384" cy="238" r="2.5" fill="#0B1220" stroke="none"/><circle cx="396" cy="238" r="2.5" fill="#0B1220" stroke="none"/><circle cx="372" cy="216" r="4" fill="#0B1220" stroke="none"/><circle cx="408" cy="216" r="4" fill="#0B1220" stroke="none"/><rect x="382" y="190" width="16" height="4" rx="2" fill="#0B1220" stroke="none"/><path d="M424,238 Q432,238 430,228" fill="none" stroke-width="2"/><circle cx="446" cy="252" r="11" fill="#F5B841" stroke-width="1.5"/><text x="446" y="257" text-anchor="middle" font-size="11" fill="#0B1220" stroke="none" font-weight="500">$</text></g>
-    <g class="mascot-node" data-target="#self"><circle cx="490" cy="150" r="42" fill="#17223A"/><path d="M462,116 L474,132 L454,132 Z" fill="#17223A"/><path d="M518,116 L506,132 L526,132 Z" fill="#17223A"/><ellipse cx="472" cy="150" rx="16" ry="11" fill="#F5B841" stroke-width="1.5"/><ellipse cx="508" cy="150" rx="16" ry="11" fill="#F5B841" stroke-width="1.5"/><line x1="488" y1="150" x2="492" y2="150" stroke-width="2"/><path d="M474,172 Q490,180 506,172" fill="none" stroke-width="2"/><ellipse cx="490" cy="184" rx="10" ry="6" fill="#5EEAD4" stroke-width="1.5"/><line x1="480" y1="184" x2="465" y2="180" stroke-width="1.5"/><line x1="500" y1="184" x2="515" y2="180" stroke-width="1.5"/></g>
-    <g class="mascot-node" data-target="#health"><circle cx="590" cy="228" r="44" fill="#E7ECF5"/><path d="M556,196 L568,212 L548,214 Z" fill="#0B1220" stroke="none"/><path d="M624,196 L612,212 L632,214 Z" fill="#0B1220" stroke="none"/><ellipse cx="570" cy="224" rx="13" ry="16" fill="#0B1220" stroke="none"/><ellipse cx="610" cy="224" rx="13" ry="16" fill="#0B1220" stroke="none"/><circle cx="573" cy="222" r="3.5" fill="#E7ECF5" stroke="none"/><circle cx="613" cy="222" r="3.5" fill="#E7ECF5" stroke="none"/><path d="M584,240 L590,246 L596,240 Z" fill="#0B1220" stroke="none"/><path d="M590,246 Q590,252 596,254" fill="none" stroke-width="2"/><path d="M574,264 Q590,272 606,264" fill="none" stroke-width="2"/><path d="M590,196 Q582,186 590,178 Q598,186 590,196" fill="#F5B841" stroke-width="1.5"/></g>
-    </g>
-    <g font-family="'IBM Plex Mono', monospace" font-size="13" fill="#8592AD">
-    <text data-target="#work" x="90" y="230" text-anchor="middle">Work</text><text data-target="#assets" x="190" y="300" text-anchor="middle">Assets</text><text data-target="#protect" x="290" y="230" text-anchor="middle">Protect</text><text data-target="#spending" x="390" y="300" text-anchor="middle">Spending</text><text data-target="#self" x="490" y="230" text-anchor="middle">Self</text><text data-target="#health" x="590" y="300" text-anchor="middle">Health</text>
-    </g></svg>`,
-
-    // des3 — bright saturated, different species
-    `<svg viewBox="0 0 680 340" role="img"><title>LivingIQ mascots</title><desc>An alternative bright-colored set of six mascots for Work, Assets, Protect, Spending, Self, and Health.</desc>
-    <path d="M90,150 C140,150 140,220 190,220 C240,220 240,150 290,150 C340,150 340,220 390,220 C440,220 440,150 490,150 C540,150 540,220 590,220" fill="none" stroke="#FFB13C" stroke-width="2" stroke-dasharray="7 7" opacity="0.55"/>
-    <g stroke="#3A2E1D" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
-    <g class="mascot-node" data-target="#work"><ellipse cx="90" cy="150" rx="46" ry="44" fill="#FF8A3D"/><path d="M58,110 L76,134 L48,132 Z" fill="#FF8A3D"/><path d="M122,110 L104,134 L132,132 Z" fill="#FF8A3D"/><path d="M60,116 L72,130 L52,130 Z" fill="#FFD9B0"/><path d="M120,116 L108,130 L128,130 Z" fill="#FFD9B0"/><circle cx="76" cy="150" r="9" fill="#3A2E1D" stroke="none"/><circle cx="104" cy="150" r="9" fill="#3A2E1D" stroke="none"/><circle cx="79" cy="147" r="2.5" fill="#fff" stroke="none"/><circle cx="107" cy="147" r="2.5" fill="#fff" stroke="none"/><ellipse cx="90" cy="166" rx="10" ry="7" fill="#FFD9B0" stroke-width="1.5"/><circle cx="90" cy="166" r="2.5" fill="#3A2E1D" stroke="none"/></g>
-    <g class="mascot-node" data-target="#assets"><ellipse cx="190" cy="230" rx="46" ry="40" fill="#9AD4E8"/><ellipse cx="160" cy="212" rx="18" ry="24" fill="#9AD4E8"/><ellipse cx="220" cy="212" rx="18" ry="24" fill="#9AD4E8"/><ellipse cx="160" cy="216" rx="10" ry="14" fill="#F2A9C4"/><ellipse cx="220" cy="216" rx="10" ry="14" fill="#F2A9C4"/><circle cx="178" cy="222" r="6" fill="#3A2E1D" stroke="none"/><circle cx="202" cy="222" r="6" fill="#3A2E1D" stroke="none"/><ellipse cx="190" cy="240" rx="20" ry="12" fill="#fff" stroke-width="1.5"/><ellipse cx="182" cy="240" r="3" fill="#3A2E1D" stroke="none"/><ellipse cx="198" cy="240" r="3" fill="#3A2E1D" stroke="none"/></g>
-    <g class="mascot-node" data-target="#protect"><circle cx="290" cy="150" r="44" fill="#FFCE45"/><ellipse cx="290" cy="188" rx="18" ry="10" fill="#3A2E1D"/><path d="M272,192 Q290,200 308,192" fill="none" stroke="#3A2E1D" stroke-width="2"/><circle cx="272" cy="146" r="10" fill="#fff" stroke-width="1.5"/><circle cx="308" cy="146" r="10" fill="#fff" stroke-width="1.5"/><circle cx="274" cy="147" r="4" fill="#3A2E1D" stroke="none"/><circle cx="310" cy="147" r="4" fill="#3A2E1D" stroke="none"/><rect x="248" y="132" width="20" height="34" rx="6" fill="#FFCE45"/><rect x="312" y="132" width="20" height="34" rx="6" fill="#FFCE45"/></g>
-    <g class="mascot-node" data-target="#spending"><ellipse cx="390" cy="228" rx="44" ry="38" fill="#F2A9C4"/><path d="M364,196 L376,206 L358,208 Z" fill="#F2A9C4"/><path d="M416,196 L404,206 L422,208 Z" fill="#F2A9C4"/><ellipse cx="390" cy="238" rx="16" ry="10" fill="#F2A9C4"/><circle cx="384" cy="238" r="2.5" fill="#3A2E1D" stroke="none"/><circle cx="396" cy="238" r="2.5" fill="#3A2E1D" stroke="none"/><circle cx="372" cy="216" r="4" fill="#3A2E1D" stroke="none"/><circle cx="408" cy="216" r="4" fill="#3A2E1D" stroke="none"/><rect x="382" y="190" width="16" height="4" rx="2" fill="#3A2E1D" stroke="none"/><path d="M424,238 Q432,238 430,228" fill="none" stroke-width="2"/><circle cx="446" cy="252" r="11" fill="#FFCE45" stroke-width="1.5"/><text x="446" y="257" text-anchor="middle" font-size="11" fill="#3A2E1D" stroke="none" font-weight="500">$</text></g>
-    <g class="mascot-node" data-target="#self"><circle cx="490" cy="150" r="42" fill="#C9A6EE"/><path d="M462,116 L474,132 L454,132 Z" fill="#C9A6EE"/><path d="M518,116 L506,132 L526,132 Z" fill="#C9A6EE"/><ellipse cx="472" cy="150" rx="16" ry="11" fill="#3A2E1D" stroke="none"/><ellipse cx="508" cy="150" rx="16" ry="11" fill="#3A2E1D" stroke="none"/><line x1="488" y1="150" x2="492" y2="150" stroke-width="2"/><path d="M474,172 Q490,180 506,172" fill="none" stroke-width="2"/><ellipse cx="490" cy="184" rx="10" ry="6" fill="#FF8A3D" stroke-width="1.5"/><line x1="480" y1="184" x2="465" y2="180" stroke-width="1.5"/><line x1="500" y1="184" x2="515" y2="180" stroke-width="1.5"/></g>
-    <g class="mascot-node" data-target="#health"><ellipse cx="590" cy="232" rx="44" ry="38" fill="#FFFDF6"/><ellipse cx="590" cy="204" rx="16" ry="10" fill="#FFFDF6"/><circle cx="572" cy="228" r="6" fill="#3A2E1D" stroke="none"/><circle cx="608" cy="228" r="6" fill="#3A2E1D" stroke="none"/><circle cx="574" cy="225" r="2" fill="#fff" stroke="none"/><circle cx="610" cy="225" r="2" fill="#fff" stroke="none"/><ellipse cx="590" cy="242" rx="8" ry="6" fill="#F2A9C4" stroke-width="1.5"/><path d="M578,254 Q590,260 602,254" fill="none" stroke-width="2"/><ellipse cx="558" cy="234" rx="6" ry="10" fill="#F2A9C4"/><ellipse cx="622" cy="234" rx="6" ry="10" fill="#F2A9C4"/></g>
-    </g>
-    <g font-family="'IBM Plex Mono', monospace" font-size="13" fill="#8592AD">
-    <text data-target="#work" x="90" y="230" text-anchor="middle">Work</text><text data-target="#assets" x="190" y="300" text-anchor="middle">Assets</text><text data-target="#protect" x="290" y="230" text-anchor="middle">Protect</text><text data-target="#spending" x="390" y="300" text-anchor="middle">Spending</text><text data-target="#self" x="490" y="230" text-anchor="middle">Self</text><text data-target="#health" x="590" y="300" text-anchor="middle">Health</text>
-    </g></svg>`
-  ];
-
-  const chosen = mascotVariants[Math.floor(Math.random() * mascotVariants.length)];
-  const stripEl = document.getElementById('mascot-strip');
-  stripEl.innerHTML = chosen;
-
-  stripEl.addEventListener('click', (e) => {
-    const el = e.target.closest('[data-target]');
-    if (!el) return;
-    const target = document.querySelector(el.getAttribute('data-target'));
-    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  });
+const mascotVariants = [
+// des1 — pastel bodies, unified teal/amber accents
+`<svg viewBox="0 0 680 340" role="img"><title>LivingIQ mascots</title><desc>Six mascots representing Work, Assets, Protect, Spending, Self, and Health.</desc>
+<path d="M90,150 C140,150 140,220 190,220 C240,220 240,150 290,150 C340,150 340,220 390,220 C440,220 440,150 490,150 C540,150 540,220 590,220" fill="none" stroke="#5EEAD4" stroke-width="2" stroke-dasharray="7 7" opacity="0.55"/>
+<g stroke="#213347" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+<g class="mascot-node" data-target="#work"><ellipse cx="90" cy="150" rx="46" ry="44" fill="#2FB89C"/><path d="M62,116 L74,132 L54,134 Z" fill="#2FB89C"/><path d="M118,116 L106,132 L126,134 Z" fill="#2FB89C"/><circle cx="72" cy="148" r="15" fill="#FDFBF4" stroke-width="1.5"/><circle cx="108" cy="148" r="15" fill="#FDFBF4" stroke-width="1.5"/><circle cx="74" cy="150" r="6" fill="#213347" stroke="none"/><circle cx="106" cy="150" r="6" fill="#213347" stroke="none"/><path d="M85,164 L95,164 L90,172 Z" fill="#F5B841" stroke-width="1.5"/><circle cx="128" cy="176" r="9" fill="none" stroke="#F5B841" stroke-width="2"/><line x1="135" y1="183" x2="142" y2="190" stroke="#F5B841" stroke-width="2"/></g>
+<g class="mascot-node" data-target="#assets"><ellipse cx="190" cy="228" rx="44" ry="36" fill="#8FC98A"/><path d="M160,204 L190,182 L220,204 Z" fill="#F5B841"/><circle cx="178" cy="222" r="5" fill="#213347" stroke="none"/><circle cx="202" cy="222" r="5" fill="#213347" stroke="none"/><path d="M180,236 Q190,242 200,236" fill="none" stroke-width="2"/><ellipse cx="152" cy="248" rx="8" ry="6" fill="#8FC98A"/><ellipse cx="228" cy="248" rx="8" ry="6" fill="#8FC98A"/></g>
+<g class="mascot-node" data-target="#protect"><rect x="248" y="132" width="84" height="46" rx="20" fill="#EE8266"/><circle cx="310" cy="180" r="10" fill="#3a3f4b"/><circle cx="270" cy="180" r="10" fill="#3a3f4b"/><circle cx="270" cy="150" r="10" fill="#FDFBF4" stroke-width="1.5"/><circle cx="310" cy="150" r="10" fill="#FDFBF4" stroke-width="1.5"/><circle cx="271" cy="151" r="4" fill="#213347" stroke="none"/><circle cx="311" cy="151" r="4" fill="#213347" stroke="none"/><rect x="278" y="132" width="24" height="10" rx="3" fill="#5EEAD4" transform="rotate(-18 290 137)" stroke-width="1.5"/><path d="M287,128 l3,6 -6,2 6,2 -3,6" fill="none" stroke="#F5B841" stroke-width="1.5"/></g>
+<g class="mascot-node" data-target="#spending"><ellipse cx="390" cy="228" rx="44" ry="38" fill="#F2A9C4"/><path d="M364,196 L376,206 L358,208 Z" fill="#F2A9C4"/><path d="M416,196 L404,206 L422,208 Z" fill="#F2A9C4"/><ellipse cx="390" cy="238" rx="16" ry="10" fill="#F2A9C4"/><circle cx="384" cy="238" r="2.5" fill="#213347" stroke="none"/><circle cx="396" cy="238" r="2.5" fill="#213347" stroke="none"/><circle cx="372" cy="216" r="4" fill="#213347" stroke="none"/><circle cx="408" cy="216" r="4" fill="#213347" stroke="none"/><rect x="382" y="190" width="16" height="4" rx="2" fill="#213347" stroke="none"/><path d="M424,238 Q432,238 430,228" fill="none" stroke-width="2"/><circle cx="446" cy="252" r="11" fill="#F5B841" stroke-width="1.5"/><text x="446" y="257" text-anchor="middle" font-size="11" fill="#213347" stroke="none" font-weight="500">$</text></g>
+<g class="mascot-node" data-target="#self"><circle cx="490" cy="150" r="42" fill="#B49CE0"/><path d="M462,116 L474,132 L454,132 Z" fill="#B49CE0"/><path d="M518,116 L506,132 L526,132 Z" fill="#B49CE0"/><ellipse cx="472" cy="150" rx="16" ry="11" fill="#213347" stroke-width="1.5"/><ellipse cx="508" cy="150" rx="16" ry="11" fill="#213347" stroke-width="1.5"/><line x1="488" y1="150" x2="492" y2="150" stroke="#5EEAD4" stroke-width="2"/><path d="M474,172 Q490,180 506,172" fill="none" stroke-width="2"/><ellipse cx="490" cy="184" rx="10" ry="6" fill="#F5B841" stroke-width="1.5"/><line x1="480" y1="184" x2="465" y2="180" stroke-width="1.5"/><line x1="500" y1="184" x2="515" y2="180" stroke-width="1.5"/></g>
+<g class="mascot-node" data-target="#health"><circle cx="590" cy="228" r="44" fill="#FDFBF4"/><path d="M556,196 L568,212 L548,214 Z" fill="#213347" stroke="none"/><path d="M624,196 L612,212 L632,214 Z" fill="#213347" stroke="none"/><ellipse cx="570" cy="224" rx="13" ry="16" fill="#213347" stroke="none"/><ellipse cx="610" cy="224" rx="13" ry="16" fill="#213347" stroke="none"/><circle cx="573" cy="222" r="3.5" fill="#FDFBF4" stroke="none"/><circle cx="613" cy="222" r="3.5" fill="#FDFBF4" stroke="none"/><path d="M584,240 L590,246 L596,240 Z" fill="#213347" stroke="none"/><path d="M590,246 Q590,252 596,254" fill="none" stroke-width="2"/><path d="M574,264 Q590,272 606,264" fill="none" stroke-width="2"/><path d="M590,196 Q582,186 590,178 Q598,186 590,196" fill="#F5B841" stroke-width="1.5"/></g>
+</g>
+<g font-family="'IBM Plex Mono', monospace" font-size="13" fill="#8592AD">
+<text data-target="#work" x="90" y="230" text-anchor="middle">ProjectIQ</text><text data-target="#assets" x="190" y="300" text-anchor="middle">PropertyIQ</text><text data-target="#protect" x="290" y="230" text-anchor="middle">AccidentIQ</text><text data-target="#spending" x="390" y="300" text-anchor="middle">PriceIQ</text><text data-target="#self" x="490" y="230" text-anchor="middle">Self</text><text data-target="#health" x="590" y="300" text-anchor="middle">HealthIQ</text>
+</g></svg>`,
+// des2 — fully brand-recolored (navy/teal/amber only)
+`<svg viewBox="0 0 680 340" role="img"><title>LivingIQ mascots</title><desc>Six mascots representing Work, Assets, Protect, Spending, Self, and Health, in navy, teal, and amber.</desc>
+<path d="M90,150 C140,150 140,220 190,220 C240,220 240,150 290,150 C340,150 340,220 390,220 C440,220 440,150 490,150 C540,150 540,220 590,220" fill="none" stroke="#5EEAD4" stroke-width="2" stroke-dasharray="7 7" opacity="0.5"/>
+<g stroke="#0B1220" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+<g class="mascot-node" data-target="#work"><ellipse cx="90" cy="150" rx="46" ry="44" fill="#0F6E56"/><path d="M62,116 L74,132 L54,134 Z" fill="#0F6E56"/><path d="M118,116 L106,132 L126,134 Z" fill="#0F6E56"/><circle cx="72" cy="148" r="15" fill="#E7ECF5" stroke-width="1.5"/><circle cx="108" cy="148" r="15" fill="#E7ECF5" stroke-width="1.5"/><circle cx="74" cy="150" r="6" fill="#0B1220" stroke="none"/><circle cx="106" cy="150" r="6" fill="#0B1220" stroke="none"/><path d="M85,164 L95,164 L90,172 Z" fill="#F5B841" stroke-width="1.5"/><circle cx="128" cy="176" r="9" fill="none" stroke-width="2"/><line x1="135" y1="183" x2="142" y2="190" stroke-width="2"/></g>
+<g class="mascot-node" data-target="#assets"><ellipse cx="190" cy="228" rx="44" ry="36" fill="#1D9E75"/><path d="M160,204 L190,182 L220,204 Z" fill="#F5B841"/><circle cx="178" cy="222" r="5" fill="#0B1220" stroke="none"/><circle cx="202" cy="222" r="5" fill="#0B1220" stroke="none"/><path d="M180,236 Q190,242 200,236" fill="none" stroke-width="2"/><ellipse cx="152" cy="248" rx="8" ry="6" fill="#1D9E75"/><ellipse cx="228" cy="248" rx="8" ry="6" fill="#1D9E75"/></g>
+<g class="mascot-node" data-target="#protect"><rect x="248" y="132" width="84" height="46" rx="20" fill="#17223A"/><circle cx="310" cy="180" r="10" fill="#5EEAD4"/><circle cx="270" cy="180" r="10" fill="#5EEAD4"/><circle cx="270" cy="150" r="10" fill="#E7ECF5" stroke-width="1.5"/><circle cx="310" cy="150" r="10" fill="#E7ECF5" stroke-width="1.5"/><circle cx="271" cy="151" r="4" fill="#0B1220" stroke="none"/><circle cx="311" cy="151" r="4" fill="#0B1220" stroke="none"/><rect x="278" y="132" width="24" height="10" rx="3" fill="#E7ECF5" transform="rotate(-18 290 137)" stroke-width="1.5"/><path d="M287,128 l3,6 -6,2 6,2 -3,6" fill="none" stroke="#F5B841" stroke-width="1.5"/></g>
+<g class="mascot-node" data-target="#spending"><ellipse cx="390" cy="228" rx="44" ry="38" fill="#5EEAD4"/><path d="M364,196 L376,206 L358,208 Z" fill="#5EEAD4"/><path d="M416,196 L404,206 L422,208 Z" fill="#5EEAD4"/><ellipse cx="390" cy="238" rx="16" ry="10" fill="#5EEAD4"/><circle cx="384" cy="238" r="2.5" fill="#0B1220" stroke="none"/><circle cx="396" cy="238" r="2.5" fill="#0B1220" stroke="none"/><circle cx="372" cy="216" r="4" fill="#0B1220" stroke="none"/><circle cx="408" cy="216" r="4" fill="#0B1220" stroke="none"/><rect x="382" y="190" width="16" height="4" rx="2" fill="#0B1220" stroke="none"/><path d="M424,238 Q432,238 430,228" fill="none" stroke-width="2"/><circle cx="446" cy="252" r="11" fill="#F5B841" stroke-width="1.5"/><text x="446" y="257" text-anchor="middle" font-size="11" fill="#0B1220" stroke="none" font-weight="500">$</text></g>
+<g class="mascot-node" data-target="#self"><circle cx="490" cy="150" r="42" fill="#17223A"/><path d="M462,116 L474,132 L454,132 Z" fill="#17223A"/><path d="M518,116 L506,132 L526,132 Z" fill="#17223A"/><ellipse cx="472" cy="150" rx="16" ry="11" fill="#F5B841" stroke-width="1.5"/><ellipse cx="508" cy="150" rx="16" ry="11" fill="#F5B841" stroke-width="1.5"/><line x1="488" y1="150" x2="492" y2="150" stroke-width="2"/><path d="M474,172 Q490,180 506,172" fill="none" stroke-width="2"/><ellipse cx="490" cy="184" rx="10" ry="6" fill="#5EEAD4" stroke-width="1.5"/><line x1="480" y1="184" x2="465" y2="180" stroke-width="1.5"/><line x1="500" y1="184" x2="515" y2="180" stroke-width="1.5"/></g>
+<g class="mascot-node" data-target="#health"><circle cx="590" cy="228" r="44" fill="#E7ECF5"/><path d="M556,196 L568,212 L548,214 Z" fill="#0B1220" stroke="none"/><path d="M624,196 L612,212 L632,214 Z" fill="#0B1220" stroke="none"/><ellipse cx="570" cy="224" rx="13" ry="16" fill="#0B1220" stroke="none"/><ellipse cx="610" cy="224" rx="13" ry="16" fill="#0B1220" stroke="none"/><circle cx="573" cy="222" r="3.5" fill="#E7ECF5" stroke="none"/><circle cx="613" cy="222" r="3.5" fill="#E7ECF5" stroke="none"/><path d="M584,240 L590,246 L596,240 Z" fill="#0B1220" stroke="none"/><path d="M590,246 Q590,252 596,254" fill="none" stroke-width="2"/><path d="M574,264 Q590,272 606,264" fill="none" stroke-width="2"/><path d="M590,196 Q582,186 590,178 Q598,186 590,196" fill="#F5B841" stroke-width="1.5"/></g>
+</g>
+<g font-family="'IBM Plex Mono', monospace" font-size="13" fill="#8592AD">
+<text data-target="#work" x="90" y="230" text-anchor="middle">ProjectIQ</text><text data-target="#assets" x="190" y="300" text-anchor="middle">PropertyIQ</text><text data-target="#protect" x="290" y="230" text-anchor="middle">AccidentIQ</text><text data-target="#spending" x="390" y="300" text-anchor="middle">PriceIQ</text><text data-target="#self" x="490" y="230" text-anchor="middle">Self</text><text data-target="#health" x="590" y="300" text-anchor="middle">HealthIQ</text>
+</g></svg>`,
+// des3 — bright saturated, different species
+`<svg viewBox="0 0 680 340" role="img"><title>LivingIQ mascots</title><desc>An alternative bright-colored set of six mascots for Work, Assets, Protect, Spending, Self, and Health.</desc>
+<path d="M90,150 C140,150 140,220 190,220 C240,220 240,150 290,150 C340,150 340,220 390,220 C440,220 440,150 490,150 C540,150 540,220 590,220" fill="none" stroke="#FFB13C" stroke-width="2" stroke-dasharray="7 7" opacity="0.55"/>
+<g stroke="#3A2E1D" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+<g class="mascot-node" data-target="#work"><ellipse cx="90" cy="150" rx="46" ry="44" fill="#FF8A3D"/><path d="M58,110 L76,134 L48,132 Z" fill="#FF8A3D"/><path d="M122,110 L104,134 L132,132 Z" fill="#FF8A3D"/><path d="M60,116 L72,130 L52,130 Z" fill="#FFD9B0"/><path d="M120,116 L108,130 L128,130 Z" fill="#FFD9B0"/><circle cx="76" cy="150" r="9" fill="#3A2E1D" stroke="none"/><circle cx="104" cy="150" r="9" fill="#3A2E1D" stroke="none"/><circle cx="79" cy="147" r="2.5" fill="#fff" stroke="none"/><circle cx="107" cy="147" r="2.5" fill="#fff" stroke="none"/><ellipse cx="90" cy="166" rx="10" ry="7" fill="#FFD9B0" stroke-width="1.5"/><circle cx="90" cy="166" r="2.5" fill="#3A2E1D" stroke="none"/></g>
+<g class="mascot-node" data-target="#assets"><ellipse cx="190" cy="230" rx="46" ry="40" fill="#9AD4E8"/><ellipse cx="160" cy="212" rx="18" ry="24" fill="#9AD4E8"/><ellipse cx="220" cy="212" rx="18" ry="24" fill="#9AD4E8"/><ellipse cx="160" cy="216" rx="10" ry="14" fill="#F2A9C4"/><ellipse cx="220" cy="216" rx="10" ry="14" fill="#F2A9C4"/><circle cx="178" cy="222" r="6" fill="#3A2E1D" stroke="none"/><circle cx="202" cy="222" r="6" fill="#3A2E1D" stroke="none"/><ellipse cx="190" cy="240" rx="20" ry="12" fill="#fff" stroke-width="1.5"/><ellipse cx="182" cy="240" r="3" fill="#3A2E1D" stroke="none"/><ellipse cx="198" cy="240" r="3" fill="#3A2E1D" stroke="none"/></g>
+<g class="mascot-node" data-target="#protect"><circle cx="290" cy="150" r="44" fill="#FFCE45"/><ellipse cx="290" cy="188" rx="18" ry="10" fill="#3A2E1D"/><path d="M272,192 Q290,200 308,192" fill="none" stroke="#3A2E1D" stroke-width="2"/><circle cx="272" cy="146" r="10" fill="#fff" stroke-width="1.5"/><circle cx="308" cy="146" r="10" fill="#fff" stroke-width="1.5"/><circle cx="274" cy="147" r="4" fill="#3A2E1D" stroke="none"/><circle cx="310" cy="147" r="4" fill="#3A2E1D" stroke="none"/><rect x="248" y="132" width="20" height="34" rx="6" fill="#FFCE45"/><rect x="312" y="132" width="20" height="34" rx="6" fill="#FFCE45"/></g>
+<g class="mascot-node" data-target="#spending"><ellipse cx="390" cy="228" rx="44" ry="38" fill="#F2A9C4"/><path d="M364,196 L376,206 L358,208 Z" fill="#F2A9C4"/><path d="M416,196 L404,206 L422,208 Z" fill="#F2A9C4"/><ellipse cx="390" cy="238" rx="16" ry="10" fill="#F2A9C4"/><circle cx="384" cy="238" r="2.5" fill="#3A2E1D" stroke="none"/><circle cx="396" cy="238" r="2.5" fill="#3A2E1D" stroke="none"/><circle cx="372" cy="216" r="4" fill="#3A2E1D" stroke="none"/><circle cx="408" cy="216" r="4" fill="#3A2E1D" stroke="none"/><rect x="382" y="190" width="16" height="4" rx="2" fill="#3A2E1D" stroke="none"/><path d="M424,238 Q432,238 430,228" fill="none" stroke-width="2"/><circle cx="446" cy="252" r="11" fill="#FFCE45" stroke-width="1.5"/><text x="446" y="257" text-anchor="middle" font-size="11" fill="#3A2E1D" stroke="none" font-weight="500">$</text></g>
+<g class="mascot-node" data-target="#self"><circle cx="490" cy="150" r="42" fill="#C9A6EE"/><path d="M462,116 L474,132 L454,132 Z" fill="#C9A6EE"/><path d="M518,116 L506,132 L526,132 Z" fill="#C9A6EE"/><ellipse cx="472" cy="150" rx="16" ry="11" fill="#3A2E1D" stroke="none"/><ellipse cx="508" cy="150" rx="16" ry="11" fill="#3A2E1D" stroke="none"/><line x1="488" y1="150" x2="492" y2="150" stroke-width="2"/><path d="M474,172 Q490,180 506,172" fill="none" stroke-width="2"/><ellipse cx="490" cy="184" rx="10" ry="6" fill="#FF8A3D" stroke-width="1.5"/><line x1="480" y1="184" x2="465" y2="180" stroke-width="1.5"/><line x1="500" y1="184" x2="515" y2="180" stroke-width="1.5"/></g>
+<g class="mascot-node" data-target="#health"><ellipse cx="590" cy="232" rx="44" ry="38" fill="#FFFDF6"/><ellipse cx="590" cy="204" rx="16" ry="10" fill="#FFFDF6"/><circle cx="572" cy="228" r="6" fill="#3A2E1D" stroke="none"/><circle cx="608" cy="228" r="6" fill="#3A2E1D" stroke="none"/><circle cx="574" cy="225" r="2" fill="#fff" stroke="none"/><circle cx="610" cy="225" r="2" fill="#fff" stroke="none"/><ellipse cx="590" cy="242" rx="8" ry="6" fill="#F2A9C4" stroke-width="1.5"/><path d="M578,254 Q590,260 602,254" fill="none" stroke-width="2"/><ellipse cx="558" cy="234" rx="6" ry="10" fill="#F2A9C4"/><ellipse cx="622" cy="234" rx="6" ry="10" fill="#F2A9C4"/></g>
+</g>
+<g font-family="'IBM Plex Mono', monospace" font-size="13" fill="#8592AD">
+<text data-target="#work" x="90" y="230" text-anchor="middle">ProjectIQ</text><text data-target="#assets" x="190" y="300" text-anchor="middle">PropertyIQ</text><text data-target="#protect" x="290" y="230" text-anchor="middle">AccidentIQ</text><text data-target="#spending" x="390" y="300" text-anchor="middle">PriceIQ</text><text data-target="#self" x="490" y="230" text-anchor="middle">Self</text><text data-target="#health" x="590" y="300" text-anchor="middle">HealthIQ</text>
+</g></svg>`
+];
+const chosen = mascotVariants[Math.floor(Math.random() * mascotVariants.length)];
+const stripEl = document.getElementById('mascot-strip');
+stripEl.innerHTML = chosen;
+stripEl.addEventListener('click', (e) => {
+const el = e.target.closest('[data-target]');
+if (!el) return;
+const target = document.querySelector(el.getAttribute('data-target'));
+if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
 </script>
-
 </body>
 </html>
