@@ -180,6 +180,28 @@
     </div>
 
     <div class="panel">
+      <h2>Banners</h2>
+      <div class="settings-row" style="margin-bottom:14px;">
+        <label class="switch-label">
+          <span class="switch"><input type="checkbox" id="message-banner-toggle"><span class="slider"></span></span>
+          Show message banner
+        </label>
+      </div>
+      <div class="msg-field" style="margin-bottom:16px; max-width:520px;">
+        <label>Message text</label>
+        <textarea id="message-banner-text" placeholder="e.g. New: DealIQ is now live!"></textarea>
+      </div>
+      <div class="settings-row">
+        <label class="switch-label">
+          <span class="switch"><input type="checkbox" id="ad-banner-toggle"><span class="slider"></span></span>
+          Show ad banner (placeholder)
+        </label>
+        <button class="btn btn-primary" id="save-banners-btn">Save</button>
+        <span class="save-status" id="banners-save-status"></span>
+      </div>
+    </div>
+
+    <div class="panel">
       <h2>Visitor analytics</h2>
       <div class="stat-row">
         <div class="stat"><div class="num" id="stat-total-visits">—</div><div class="lbl">Total visits</div></div>
@@ -218,6 +240,7 @@
     appPanel.style.display = 'block';
     loadCards();
     loadSettings();
+    loadBanners();
     loadAnalytics();
   }
   function showLogin(){
@@ -363,8 +386,29 @@
     });
   }
 
+  async function loadBanners(){
+    const { data } = await sb.from('banners').select('message_enabled, message_text, ad_enabled').eq('id', true).single();
+    if (data) {
+      document.getElementById('message-banner-toggle').checked = !!data.message_enabled;
+      document.getElementById('message-banner-text').value = data.message_text || '';
+      document.getElementById('ad-banner-toggle').checked = !!data.ad_enabled;
+    }
+
+    document.getElementById('save-banners-btn').addEventListener('click', async () => {
+      const statusEl = document.getElementById('banners-save-status');
+      const message_enabled = document.getElementById('message-banner-toggle').checked;
+      const message_text = document.getElementById('message-banner-text').value;
+      const ad_enabled = document.getElementById('ad-banner-toggle').checked;
+
+      statusEl.textContent = 'Saving…';
+      const { error } = await sb.from('banners').update({ message_enabled, message_text, ad_enabled }).eq('id', true);
+      statusEl.textContent = error ? 'Error — not saved' : 'Saved ✓';
+      if (!error) setTimeout(() => { statusEl.textContent = ''; }, 2500);
+    });
+  }
+
   async function loadAnalytics(){
-    const { data: visits, error } = await sb.from('visits').select('country, lat, lng');
+    const { data: visits, error } = await sb.from('visits').select('country, city, lat, lng');
     const mapWrap = document.getElementById('world-map-wrap');
 
     if (error || !visits) {
@@ -385,7 +429,8 @@
       const jitterX = (Math.random() - 0.5) * 4;
       const jitterY = (Math.random() - 0.5) * 4;
       const [x, y] = projectLatLng(v.lat, v.lng);
-      visitDots += '<circle class="visit-dot" cx="' + (x + jitterX).toFixed(1) + '" cy="' + (y + jitterY).toFixed(1) + '" r="4"/>';
+      const label = [v.city, v.country].filter(Boolean).join(', ') || 'Unknown location';
+      visitDots += '<circle class="visit-dot" cx="' + (x + jitterX).toFixed(1) + '" cy="' + (y + jitterY).toFixed(1) + '" r="4"><title>' + escapeHTML(label) + '</title></circle>';
     });
 
     mapWrap.innerHTML = '<svg viewBox="30.767 241.591 784.077 458.627" role="img" aria-label="World map of visitor locations">' + WORLD_MAP_SVG + visitDots + '</svg>';
