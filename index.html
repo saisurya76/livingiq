@@ -603,6 +603,9 @@
   }
 
   function runCelebration(durationSeconds, loop, style){
+    const existing = document.getElementById('celebration-layer');
+    if (existing) existing.remove();
+
     const layer = document.createElement('div');
     layer.id = 'celebration-layer';
     document.body.appendChild(layer);
@@ -629,13 +632,17 @@
     const duration = configRow ? configRow.duration_seconds : 8;
     const style = configRow ? configRow.style : 'flowers';
     const repeatSeconds = configRow ? configRow.repeat_seconds : 0;
+    const runtimeMs = Math.max(duration, 1) * 1000 + 1500;
 
-    setTimeout(() => {
+    function cycle(){
       runCelebration(duration, loop, style);
       if (repeatSeconds > 0) {
-        setInterval(() => runCelebration(duration, loop, style), repeatSeconds * 1000);
+        // Wait for this celebration to fully finish, THEN wait the repeat gap —
+        // never starts a new one on top of a still-running one.
+        setTimeout(cycle, runtimeMs + repeatSeconds * 1000);
       }
-    }, 2000);
+    }
+    setTimeout(cycle, 2000);
   }
   maybeRunCelebration();
 
