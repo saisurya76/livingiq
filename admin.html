@@ -94,6 +94,24 @@
 
   #app-panel{ display:none; }
   .loading-note{ color:var(--muted); font-size:0.85rem; }
+
+  .panel{
+    background:var(--surface); border:1px solid var(--line); border-radius:12px;
+    padding:22px 24px; margin-bottom:32px;
+  }
+  .panel h2{ font-size:1.05rem; margin-bottom:16px; }
+  .settings-row{ display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+  .settings-row .switch-label{ display:flex; align-items:center; gap:8px; font-size:0.9rem; }
+
+  .stat-row{ display:flex; gap:28px; margin-bottom:20px; flex-wrap:wrap; }
+  .stat{ }
+  .stat .num{ font-family:'Space Grotesk',sans-serif; font-size:1.9rem; font-weight:700; color:var(--teal); }
+  .stat .lbl{ font-family:'IBM Plex Mono',monospace; font-size:0.72rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; }
+
+  #world-map-wrap{ width:100%; overflow:hidden; border-radius:10px; background:var(--bg); border:1px solid var(--line); }
+  #world-map-wrap svg{ width:100%; height:auto; display:block; }
+  .landmass-dot{ fill:var(--line); }
+  .visit-dot{ fill:var(--teal); opacity:0.55; }
 </style>
 </head>
 <body>
@@ -122,6 +140,30 @@
       <h1><span class="dot"></span>LivingIQ Admin</h1>
       <button class="btn" id="logout-btn">Sign out</button>
     </div>
+
+    <div class="panel">
+      <h2>Site settings</h2>
+      <div class="settings-row">
+        <label class="switch-label">
+          <span class="switch"><input type="checkbox" id="splash-toggle"><span class="slider"></span></span>
+          Arrival celebration splash (confetti, 2s after page load)
+        </label>
+        <button class="btn btn-primary" id="save-settings-btn">Save</button>
+        <span class="save-status" id="settings-save-status"></span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Visitor analytics</h2>
+      <div class="stat-row">
+        <div class="stat"><div class="num" id="stat-total-visits">—</div><div class="lbl">Total visits</div></div>
+        <div class="stat"><div class="num" id="stat-countries">—</div><div class="lbl">Countries reached</div></div>
+      </div>
+      <div id="world-map-wrap">
+        <p class="loading-note" style="padding:16px">Loading map…</p>
+      </div>
+    </div>
+
     <div id="cards-container">
       <p class="loading-note">Loading cards…</p>
     </div>
@@ -149,6 +191,8 @@
     loginScreen.style.display = 'none';
     appPanel.style.display = 'block';
     loadCards();
+    loadSettings();
+    loadAnalytics();
   }
   function showLogin(){
     loginScreen.style.display = 'block';
@@ -247,6 +291,54 @@
         if (!error) setTimeout(() => { statusEl.textContent = ''; }, 2500);
       });
     });
+  }
+
+  const WORLD_DOTS_SVG = '<g class="landmass-dot"><circle cx="312" cy="24" r="2"/><circle cx="336" cy="24" r="2"/><circle cx="360" cy="24" r="2"/><circle cx="384" cy="24" r="2"/><circle cx="408" cy="24" r="2"/><circle cx="432" cy="24" r="2"/><circle cx="456" cy="24" r="2"/><circle cx="312" cy="48" r="2"/><circle cx="336" cy="48" r="2"/><circle cx="360" cy="48" r="2"/><circle cx="384" cy="48" r="2"/><circle cx="408" cy="48" r="2"/><circle cx="432" cy="48" r="2"/><circle cx="456" cy="48" r="2"/><circle cx="624" cy="48" r="2"/><circle cx="648" cy="48" r="2"/><circle cx="672" cy="48" r="2"/><circle cx="696" cy="48" r="2"/><circle cx="720" cy="48" r="2"/><circle cx="744" cy="48" r="2"/><circle cx="768" cy="48" r="2"/><circle cx="792" cy="48" r="2"/><circle cx="816" cy="48" r="2"/><circle cx="840" cy="48" r="2"/><circle cx="864" cy="48" r="2"/><circle cx="888" cy="48" r="2"/><circle cx="912" cy="48" r="2"/><circle cx="936" cy="48" r="2"/><circle cx="960" cy="48" r="2"/><circle cx="984" cy="48" r="2"/><circle cx="48" cy="72" r="2"/><circle cx="72" cy="72" r="2"/><circle cx="96" cy="72" r="2"/><circle cx="120" cy="72" r="2"/><circle cx="144" cy="72" r="2"/><circle cx="168" cy="72" r="2"/><circle cx="192" cy="72" r="2"/><circle cx="216" cy="72" r="2"/><circle cx="240" cy="72" r="2"/><circle cx="264" cy="72" r="2"/><circle cx="288" cy="72" r="2"/><circle cx="312" cy="72" r="2"/><circle cx="336" cy="72" r="2"/><circle cx="360" cy="72" r="2"/><circle cx="384" cy="72" r="2"/><circle cx="408" cy="72" r="2"/><circle cx="432" cy="72" r="2"/><circle cx="456" cy="72" r="2"/><circle cx="480" cy="72" r="2"/><circle cx="504" cy="72" r="2"/><circle cx="528" cy="72" r="2"/><circle cx="552" cy="72" r="2"/><circle cx="576" cy="72" r="2"/><circle cx="600" cy="72" r="2"/><circle cx="624" cy="72" r="2"/><circle cx="648" cy="72" r="2"/><circle cx="672" cy="72" r="2"/><circle cx="696" cy="72" r="2"/><circle cx="720" cy="72" r="2"/><circle cx="744" cy="72" r="2"/><circle cx="768" cy="72" r="2"/><circle cx="792" cy="72" r="2"/><circle cx="816" cy="72" r="2"/><circle cx="840" cy="72" r="2"/><circle cx="864" cy="72" r="2"/><circle cx="888" cy="72" r="2"/><circle cx="912" cy="72" r="2"/><circle cx="936" cy="72" r="2"/><circle cx="960" cy="72" r="2"/><circle cx="984" cy="72" r="2"/><circle cx="48" cy="96" r="2"/><circle cx="72" cy="96" r="2"/><circle cx="96" cy="96" r="2"/><circle cx="120" cy="96" r="2"/><circle cx="144" cy="96" r="2"/><circle cx="168" cy="96" r="2"/><circle cx="192" cy="96" r="2"/><circle cx="216" cy="96" r="2"/><circle cx="240" cy="96" r="2"/><circle cx="264" cy="96" r="2"/><circle cx="288" cy="96" r="2"/><circle cx="312" cy="96" r="2"/><circle cx="336" cy="96" r="2"/><circle cx="480" cy="96" r="2"/><circle cx="504" cy="96" r="2"/><circle cx="528" cy="96" r="2"/><circle cx="552" cy="96" r="2"/><circle cx="576" cy="96" r="2"/><circle cx="600" cy="96" r="2"/><circle cx="624" cy="96" r="2"/><circle cx="648" cy="96" r="2"/><circle cx="672" cy="96" r="2"/><circle cx="696" cy="96" r="2"/><circle cx="720" cy="96" r="2"/><circle cx="744" cy="96" r="2"/><circle cx="768" cy="96" r="2"/><circle cx="792" cy="96" r="2"/><circle cx="816" cy="96" r="2"/><circle cx="840" cy="96" r="2"/><circle cx="864" cy="96" r="2"/><circle cx="888" cy="96" r="2"/><circle cx="912" cy="96" r="2"/><circle cx="936" cy="96" r="2"/><circle cx="960" cy="96" r="2"/><circle cx="984" cy="96" r="2"/><circle cx="48" cy="120" r="2"/><circle cx="72" cy="120" r="2"/><circle cx="96" cy="120" r="2"/><circle cx="120" cy="120" r="2"/><circle cx="144" cy="120" r="2"/><circle cx="168" cy="120" r="2"/><circle cx="192" cy="120" r="2"/><circle cx="216" cy="120" r="2"/><circle cx="240" cy="120" r="2"/><circle cx="264" cy="120" r="2"/><circle cx="288" cy="120" r="2"/><circle cx="312" cy="120" r="2"/><circle cx="336" cy="120" r="2"/><circle cx="480" cy="120" r="2"/><circle cx="504" cy="120" r="2"/><circle cx="528" cy="120" r="2"/><circle cx="552" cy="120" r="2"/><circle cx="576" cy="120" r="2"/><circle cx="600" cy="120" r="2"/><circle cx="624" cy="120" r="2"/><circle cx="648" cy="120" r="2"/><circle cx="672" cy="120" r="2"/><circle cx="696" cy="120" r="2"/><circle cx="720" cy="120" r="2"/><circle cx="744" cy="120" r="2"/><circle cx="768" cy="120" r="2"/><circle cx="792" cy="120" r="2"/><circle cx="816" cy="120" r="2"/><circle cx="840" cy="120" r="2"/><circle cx="864" cy="120" r="2"/><circle cx="888" cy="120" r="2"/><circle cx="912" cy="120" r="2"/><circle cx="936" cy="120" r="2"/><circle cx="960" cy="120" r="2"/><circle cx="984" cy="120" r="2"/><circle cx="48" cy="144" r="2"/><circle cx="72" cy="144" r="2"/><circle cx="96" cy="144" r="2"/><circle cx="120" cy="144" r="2"/><circle cx="144" cy="144" r="2"/><circle cx="168" cy="144" r="2"/><circle cx="192" cy="144" r="2"/><circle cx="216" cy="144" r="2"/><circle cx="240" cy="144" r="2"/><circle cx="264" cy="144" r="2"/><circle cx="288" cy="144" r="2"/><circle cx="312" cy="144" r="2"/><circle cx="336" cy="144" r="2"/><circle cx="480" cy="144" r="2"/><circle cx="504" cy="144" r="2"/><circle cx="528" cy="144" r="2"/><circle cx="552" cy="144" r="2"/><circle cx="576" cy="144" r="2"/><circle cx="600" cy="144" r="2"/><circle cx="624" cy="144" r="2"/><circle cx="648" cy="144" r="2"/><circle cx="672" cy="144" r="2"/><circle cx="696" cy="144" r="2"/><circle cx="720" cy="144" r="2"/><circle cx="744" cy="144" r="2"/><circle cx="768" cy="144" r="2"/><circle cx="792" cy="144" r="2"/><circle cx="816" cy="144" r="2"/><circle cx="840" cy="144" r="2"/><circle cx="864" cy="144" r="2"/><circle cx="888" cy="144" r="2"/><circle cx="912" cy="144" r="2"/><circle cx="936" cy="144" r="2"/><circle cx="960" cy="144" r="2"/><circle cx="984" cy="144" r="2"/><circle cx="48" cy="168" r="2"/><circle cx="72" cy="168" r="2"/><circle cx="96" cy="168" r="2"/><circle cx="120" cy="168" r="2"/><circle cx="144" cy="168" r="2"/><circle cx="168" cy="168" r="2"/><circle cx="192" cy="168" r="2"/><circle cx="216" cy="168" r="2"/><circle cx="240" cy="168" r="2"/><circle cx="264" cy="168" r="2"/><circle cx="288" cy="168" r="2"/><circle cx="312" cy="168" r="2"/><circle cx="336" cy="168" r="2"/><circle cx="456" cy="168" r="2"/><circle cx="480" cy="168" r="2"/><circle cx="504" cy="168" r="2"/><circle cx="528" cy="168" r="2"/><circle cx="552" cy="168" r="2"/><circle cx="576" cy="168" r="2"/><circle cx="600" cy="168" r="2"/><circle cx="624" cy="168" r="2"/><circle cx="648" cy="168" r="2"/><circle cx="672" cy="168" r="2"/><circle cx="696" cy="168" r="2"/><circle cx="720" cy="168" r="2"/><circle cx="744" cy="168" r="2"/><circle cx="768" cy="168" r="2"/><circle cx="792" cy="168" r="2"/><circle cx="816" cy="168" r="2"/><circle cx="840" cy="168" r="2"/><circle cx="864" cy="168" r="2"/><circle cx="888" cy="168" r="2"/><circle cx="912" cy="168" r="2"/><circle cx="936" cy="168" r="2"/><circle cx="960" cy="168" r="2"/><circle cx="984" cy="168" r="2"/><circle cx="48" cy="192" r="2"/><circle cx="72" cy="192" r="2"/><circle cx="96" cy="192" r="2"/><circle cx="120" cy="192" r="2"/><circle cx="144" cy="192" r="2"/><circle cx="168" cy="192" r="2"/><circle cx="192" cy="192" r="2"/><circle cx="216" cy="192" r="2"/><circle cx="240" cy="192" r="2"/><circle cx="264" cy="192" r="2"/><circle cx="288" cy="192" r="2"/><circle cx="312" cy="192" r="2"/><circle cx="336" cy="192" r="2"/><circle cx="456" cy="192" r="2"/><circle cx="480" cy="192" r="2"/><circle cx="504" cy="192" r="2"/><circle cx="528" cy="192" r="2"/><circle cx="552" cy="192" r="2"/><circle cx="576" cy="192" r="2"/><circle cx="600" cy="192" r="2"/><circle cx="624" cy="192" r="2"/><circle cx="648" cy="192" r="2"/><circle cx="672" cy="192" r="2"/><circle cx="696" cy="192" r="2"/><circle cx="720" cy="192" r="2"/><circle cx="744" cy="192" r="2"/><circle cx="768" cy="192" r="2"/><circle cx="792" cy="192" r="2"/><circle cx="816" cy="192" r="2"/><circle cx="840" cy="192" r="2"/><circle cx="864" cy="192" r="2"/><circle cx="888" cy="192" r="2"/><circle cx="912" cy="192" r="2"/><circle cx="936" cy="192" r="2"/><circle cx="960" cy="192" r="2"/><circle cx="984" cy="192" r="2"/><circle cx="288" cy="216" r="2"/><circle cx="312" cy="216" r="2"/><circle cx="336" cy="216" r="2"/><circle cx="360" cy="216" r="2"/><circle cx="384" cy="216" r="2"/><circle cx="456" cy="216" r="2"/><circle cx="480" cy="216" r="2"/><circle cx="504" cy="216" r="2"/><circle cx="528" cy="216" r="2"/><circle cx="552" cy="216" r="2"/><circle cx="576" cy="216" r="2"/><circle cx="600" cy="216" r="2"/><circle cx="624" cy="216" r="2"/><circle cx="648" cy="216" r="2"/><circle cx="672" cy="216" r="2"/><circle cx="696" cy="216" r="2"/><circle cx="720" cy="216" r="2"/><circle cx="744" cy="216" r="2"/><circle cx="768" cy="216" r="2"/><circle cx="792" cy="216" r="2"/><circle cx="816" cy="216" r="2"/><circle cx="840" cy="216" r="2"/><circle cx="864" cy="216" r="2"/><circle cx="888" cy="216" r="2"/><circle cx="912" cy="216" r="2"/><circle cx="936" cy="216" r="2"/><circle cx="960" cy="216" r="2"/><circle cx="984" cy="216" r="2"/><circle cx="288" cy="240" r="2"/><circle cx="312" cy="240" r="2"/><circle cx="336" cy="240" r="2"/><circle cx="360" cy="240" r="2"/><circle cx="384" cy="240" r="2"/><circle cx="456" cy="240" r="2"/><circle cx="480" cy="240" r="2"/><circle cx="504" cy="240" r="2"/><circle cx="528" cy="240" r="2"/><circle cx="552" cy="240" r="2"/><circle cx="576" cy="240" r="2"/><circle cx="600" cy="240" r="2"/><circle cx="624" cy="240" r="2"/><circle cx="288" cy="264" r="2"/><circle cx="312" cy="264" r="2"/><circle cx="336" cy="264" r="2"/><circle cx="360" cy="264" r="2"/><circle cx="384" cy="264" r="2"/><circle cx="456" cy="264" r="2"/><circle cx="480" cy="264" r="2"/><circle cx="504" cy="264" r="2"/><circle cx="528" cy="264" r="2"/><circle cx="552" cy="264" r="2"/><circle cx="576" cy="264" r="2"/><circle cx="600" cy="264" r="2"/><circle cx="624" cy="264" r="2"/><circle cx="288" cy="288" r="2"/><circle cx="312" cy="288" r="2"/><circle cx="336" cy="288" r="2"/><circle cx="360" cy="288" r="2"/><circle cx="384" cy="288" r="2"/><circle cx="456" cy="288" r="2"/><circle cx="480" cy="288" r="2"/><circle cx="504" cy="288" r="2"/><circle cx="528" cy="288" r="2"/><circle cx="552" cy="288" r="2"/><circle cx="576" cy="288" r="2"/><circle cx="600" cy="288" r="2"/><circle cx="624" cy="288" r="2"/><circle cx="816" cy="288" r="2"/><circle cx="840" cy="288" r="2"/><circle cx="864" cy="288" r="2"/><circle cx="888" cy="288" r="2"/><circle cx="912" cy="288" r="2"/><circle cx="288" cy="312" r="2"/><circle cx="312" cy="312" r="2"/><circle cx="336" cy="312" r="2"/><circle cx="360" cy="312" r="2"/><circle cx="384" cy="312" r="2"/><circle cx="456" cy="312" r="2"/><circle cx="480" cy="312" r="2"/><circle cx="504" cy="312" r="2"/><circle cx="528" cy="312" r="2"/><circle cx="552" cy="312" r="2"/><circle cx="576" cy="312" r="2"/><circle cx="600" cy="312" r="2"/><circle cx="624" cy="312" r="2"/><circle cx="816" cy="312" r="2"/><circle cx="840" cy="312" r="2"/><circle cx="864" cy="312" r="2"/><circle cx="888" cy="312" r="2"/><circle cx="912" cy="312" r="2"/><circle cx="288" cy="336" r="2"/><circle cx="312" cy="336" r="2"/><circle cx="336" cy="336" r="2"/><circle cx="360" cy="336" r="2"/><circle cx="384" cy="336" r="2"/><circle cx="456" cy="336" r="2"/><circle cx="480" cy="336" r="2"/><circle cx="504" cy="336" r="2"/><circle cx="528" cy="336" r="2"/><circle cx="552" cy="336" r="2"/><circle cx="576" cy="336" r="2"/><circle cx="600" cy="336" r="2"/><circle cx="624" cy="336" r="2"/><circle cx="816" cy="336" r="2"/><circle cx="840" cy="336" r="2"/><circle cx="864" cy="336" r="2"/><circle cx="888" cy="336" r="2"/><circle cx="912" cy="336" r="2"/><circle cx="288" cy="360" r="2"/><circle cx="312" cy="360" r="2"/><circle cx="336" cy="360" r="2"/><circle cx="360" cy="360" r="2"/><circle cx="384" cy="360" r="2"/><circle cx="816" cy="360" r="2"/><circle cx="840" cy="360" r="2"/><circle cx="864" cy="360" r="2"/><circle cx="888" cy="360" r="2"/><circle cx="912" cy="360" r="2"/><circle cx="288" cy="384" r="2"/><circle cx="312" cy="384" r="2"/><circle cx="336" cy="384" r="2"/><circle cx="360" cy="384" r="2"/><circle cx="384" cy="384" r="2"/></g>';
+
+  function projectLatLng(lat, lng){
+    const x = (lng + 180) / 360 * 1000;
+    const y = (90 - lat) / 180 * 500;
+    return [x, y];
+  }
+
+  async function loadSettings(){
+    const { data, error } = await sb.from('site_settings').select('value').eq('key', 'splash_enabled').single();
+    if (!error && data) {
+      document.getElementById('splash-toggle').checked = !!data.value;
+    }
+    document.getElementById('save-settings-btn').addEventListener('click', async () => {
+      const statusEl = document.getElementById('settings-save-status');
+      const value = document.getElementById('splash-toggle').checked;
+      statusEl.textContent = 'Saving…';
+      const { error } = await sb.from('site_settings').update({ value }).eq('key', 'splash_enabled');
+      statusEl.textContent = error ? 'Error — not saved' : 'Saved ✓';
+      if (!error) setTimeout(() => { statusEl.textContent = ''; }, 2500);
+    });
+  }
+
+  async function loadAnalytics(){
+    const { data: visits, error } = await sb.from('visits').select('country, lat, lng');
+    const mapWrap = document.getElementById('world-map-wrap');
+
+    if (error || !visits) {
+      mapWrap.innerHTML = '<p class="loading-note" style="padding:16px">Could not load visit data.</p>';
+      return;
+    }
+
+    document.getElementById('stat-total-visits').textContent = visits.length;
+    const countries = new Set(visits.filter(v => v.country).map(v => v.country));
+    document.getElementById('stat-countries').textContent = countries.size;
+
+    let visitDots = '';
+    visits.forEach(v => {
+      if (v.lat == null || v.lng == null) return;
+      const jitterX = (Math.random() - 0.5) * 4;
+      const jitterY = (Math.random() - 0.5) * 4;
+      const [x, y] = projectLatLng(v.lat, v.lng);
+      visitDots += '<circle class="visit-dot" cx="' + (x + jitterX).toFixed(1) + '" cy="' + (y + jitterY).toFixed(1) + '" r="4"/>';
+    });
+
+    mapWrap.innerHTML = '<svg viewBox="0 0 1000 500" role="img" aria-label="World map of visitor locations">' + WORLD_DOTS_SVG + visitDots + '</svg>';
   }
 </script>
 

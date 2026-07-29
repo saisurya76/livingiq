@@ -212,6 +212,20 @@
   #mascot-strip .mascot-node{ transition: transform 0.2s ease; transform-origin:center; transform-box:fill-box; }
   #mascot-strip .mascot-node:hover{ transform:scale(1.08) translateY(-3px); }
   #mascot-strip text[data-target]:hover{ fill:var(--teal); }
+
+  /* Arrival celebration splash */
+  #splash-layer{ position:fixed; inset:0; pointer-events:none; z-index:9999; overflow:hidden; }
+  .confetto{
+    position:absolute; top:-24px; left:var(--x);
+    width:var(--size); height:var(--size); background:var(--clr);
+    opacity:0.95; animation:confettiFall var(--dur) ease-in forwards; animation-delay:var(--delay);
+  }
+  @keyframes confettiFall{
+    0%   { transform:translateY(0) rotate(0deg); opacity:1; }
+    85%  { opacity:1; }
+    100% { transform:translateY(112vh) rotate(var(--rot)); opacity:0; }
+  }
+  @media (prefers-reduced-motion: reduce){ #splash-layer{ display:none; } }
 </style>
 </head>
 <body>
@@ -545,6 +559,62 @@
     });
   }
   renderCards();
+</script>
+
+<script>
+  // ---- Visit logging (best-effort, silent on failure) ----
+  (async function logVisit(){
+    try {
+      const res = await fetch('https://ipwho.is/');
+      const geo = await res.json();
+      if (!geo || geo.success === false) return;
+      await sb.from('visits').insert({
+        country: geo.country || null,
+        country_code: geo.country_code || null,
+        city: geo.city || null,
+        lat: geo.latitude || null,
+        lng: geo.longitude || null
+      });
+    } catch (e) {
+      // ad-blockers or offline — fine to skip silently
+    }
+  })();
+
+  // ---- Arrival celebration splash, toggled from admin ----
+  const CONFETTI_COLORS = ['#5EEAD4', '#F5B841', '#EE8266', '#B49CE0', '#F2A9C4', '#8FC98A'];
+
+  function launchConfetti(){
+    const layer = document.createElement('div');
+    layer.id = 'splash-layer';
+    const count = 46;
+    for (let n = 0; n < count; n++){
+      const el = document.createElement('div');
+      el.className = 'confetto';
+      const size = 6 + Math.random() * 8;
+      el.style.setProperty('--x', (Math.random() * 100) + 'vw');
+      el.style.setProperty('--size', size + 'px');
+      el.style.setProperty('--clr', CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)]);
+      el.style.setProperty('--dur', (3 + Math.random() * 2.2) + 's');
+      el.style.setProperty('--delay', (Math.random() * 1.2) + 's');
+      el.style.setProperty('--rot', (Math.random() > 0.5 ? 1 : -1) * (240 + Math.random() * 300) + 'deg');
+      el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+      layer.appendChild(el);
+    }
+    document.body.appendChild(layer);
+    setTimeout(() => layer.remove(), 7000);
+  }
+
+  (async function maybeShowSplash(){
+    try {
+      const { data, error } = await sb.from('site_settings').select('value').eq('key', 'splash_enabled').single();
+      if (error || !data || !data.value) return;
+      window.addEventListener('load', () => {
+        setTimeout(launchConfetti, 2000);
+      });
+    } catch (e) {
+      // settings unreachable — skip quietly, no splash
+    }
+  })();
 </script>
 
 <script>
