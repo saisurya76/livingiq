@@ -221,6 +221,10 @@
     position:absolute; top:-40px; font-size:1.6rem; opacity:0;
     animation-name:celebrationFall; animation-timing-function:ease-in; animation-fill-mode:forwards;
   }
+  .celebration-dot{
+    position:absolute; top:-24px; width:10px; height:10px; opacity:0;
+    animation-name:celebrationFall; animation-timing-function:ease-in; animation-fill-mode:forwards;
+  }
   @keyframes celebrationFall{
     0%   { opacity:0; transform:translateY(0) rotate(0deg); }
     8%   { opacity:1; }
@@ -563,32 +567,50 @@
   }
   renderCards();
 
-  // ---- Celebration splash — admin-toggleable, loop + duration configurable ----
-  function runCelebration(durationSeconds, loop){
+  // ---- Celebration splash — admin-toggleable: style, loop, duration, repeat ----
+  const STYLE_PIECES = {
+    flowers: ['🌸','🌼','🌺','🌻'],
+    stars: ['✨','⭐','🌟','💫'],
+    birthday: ['🎉','🎂','🎈','🎊'],
+    confetti: ['🎊','🎉','✨','🌟']
+  };
+  const DOT_COLORS = ['#5EEAD4', '#F5B841', '#EE8266', '#B49CE0', '#F2A9C4', '#8FC98A'];
+  const RANDOMIZABLE_STYLES = ['flowers', 'stars', 'birthday', 'confetti', 'dots'];
+
+  function burstPieces(layer, style){
+    const resolvedStyle = style === 'random'
+      ? RANDOMIZABLE_STYLES[Math.floor(Math.random() * RANDOMIZABLE_STYLES.length)]
+      : style;
+    const count = 22;
+
+    for (let n = 0; n < count; n++){
+      const el = document.createElement(resolvedStyle === 'dots' ? 'div' : 'span');
+      if (resolvedStyle === 'dots') {
+        el.className = 'celebration-dot';
+        el.style.background = DOT_COLORS[Math.floor(Math.random() * DOT_COLORS.length)];
+        el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+      } else {
+        const pieces = STYLE_PIECES[resolvedStyle] || STYLE_PIECES.flowers;
+        el.className = 'celebration-piece';
+        el.textContent = pieces[Math.floor(Math.random() * pieces.length)];
+        el.style.fontSize = (1.1 + Math.random() * 1.4) + 'rem';
+      }
+      el.style.left = Math.random() * 100 + 'vw';
+      el.style.animationDuration = (3.2 + Math.random() * 2.2) + 's';
+      el.style.animationDelay = (Math.random() * 0.6) + 's';
+      layer.appendChild(el);
+    }
+  }
+
+  function runCelebration(durationSeconds, loop, style){
     const layer = document.createElement('div');
     layer.id = 'celebration-layer';
     document.body.appendChild(layer);
 
-    const pieces = ['🌸','✨','🎉','🌟','🎊'];
-
-    function burst(){
-      const count = 22;
-      for (let n = 0; n < count; n++){
-        const el = document.createElement('span');
-        el.className = 'celebration-piece';
-        el.textContent = pieces[Math.floor(Math.random() * pieces.length)];
-        el.style.left = Math.random() * 100 + 'vw';
-        el.style.animationDuration = (3.2 + Math.random() * 2.2) + 's';
-        el.style.animationDelay = (Math.random() * 0.6) + 's';
-        el.style.fontSize = (1.1 + Math.random() * 1.4) + 'rem';
-        layer.appendChild(el);
-      }
-    }
-
-    burst();
+    burstPieces(layer, style);
     let bursts = null;
     if (loop) {
-      bursts = setInterval(burst, 1500);
+      bursts = setInterval(() => burstPieces(layer, style), 1500);
     }
     setTimeout(() => {
       if (bursts) clearInterval(bursts);
@@ -599,12 +621,21 @@
   async function maybeRunCelebration(){
     const [{ data: enabledRow }, { data: configRow }] = await Promise.all([
       sb.from('site_settings').select('value').eq('key', 'splash_enabled').single(),
-      sb.from('splash_config').select('loop, duration_seconds').eq('id', true).single()
+      sb.from('splash_config').select('loop, duration_seconds, style, repeat_seconds').eq('id', true).single()
     ]);
     if (!enabledRow || !enabledRow.value) return;
+
     const loop = configRow ? configRow.loop : true;
     const duration = configRow ? configRow.duration_seconds : 8;
-    setTimeout(() => runCelebration(duration, loop), 2000);
+    const style = configRow ? configRow.style : 'flowers';
+    const repeatSeconds = configRow ? configRow.repeat_seconds : 0;
+
+    setTimeout(() => {
+      runCelebration(duration, loop, style);
+      if (repeatSeconds > 0) {
+        setInterval(() => runCelebration(duration, loop, style), repeatSeconds * 1000);
+      }
+    }, 2000);
   }
   maybeRunCelebration();
 

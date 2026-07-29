@@ -110,8 +110,8 @@
 
   #world-map-wrap{ width:100%; overflow:hidden; border-radius:10px; background:var(--bg); border:1px solid var(--line); }
   #world-map-wrap svg{ width:100%; height:auto; display:block; }
-  .landmass-dot{ fill:var(--line); }
-  .visit-dot{ fill:var(--teal); opacity:0.55; }
+  .landmass-dot{ fill:#3A4C6E; }
+  .visit-dot{ fill:var(--teal); opacity:0.7; }
 </style>
 </head>
 <body>
@@ -156,6 +156,22 @@
           Duration
           <input type="number" id="splash-duration-input" min="1" max="60" style="width:64px; padding:6px 8px; border-radius:6px; border:1px solid var(--line); background:var(--bg); color:var(--text); font-family:'Inter',sans-serif;">
           sec
+        </label>
+        <label class="switch-label" style="gap:6px">
+          Style
+          <select id="splash-style-select" style="padding:6px 8px; border-radius:6px; border:1px solid var(--line); background:var(--bg); color:var(--text); font-family:'Inter',sans-serif;">
+            <option value="flowers">Flowers</option>
+            <option value="dots">Dots</option>
+            <option value="stars">Stars</option>
+            <option value="birthday">Birthday</option>
+            <option value="confetti">Confetti</option>
+            <option value="random">Random</option>
+          </select>
+        </label>
+        <label class="switch-label" style="gap:6px">
+          Repeat every
+          <input type="number" id="splash-repeat-input" min="0" style="width:64px; padding:6px 8px; border-radius:6px; border:1px solid var(--line); background:var(--bg); color:var(--text); font-family:'Inter',sans-serif;">
+          sec (0 = once)
         </label>
         <button class="btn btn-primary" id="save-settings-btn">Save</button>
         <span class="save-status" id="settings-save-status"></span>
@@ -313,14 +329,17 @@
   async function loadSettings(){
     const [{ data: enabledRow }, { data: configRow }] = await Promise.all([
       sb.from('site_settings').select('value').eq('key', 'splash_enabled').single(),
-      sb.from('splash_config').select('loop, duration_seconds').eq('id', true).single()
+      sb.from('splash_config').select('loop, duration_seconds, style, repeat_seconds').eq('id', true).single()
     ]);
     if (enabledRow) document.getElementById('splash-toggle').checked = !!enabledRow.value;
     if (configRow) {
       document.getElementById('splash-loop-toggle').checked = !!configRow.loop;
       document.getElementById('splash-duration-input').value = configRow.duration_seconds;
+      document.getElementById('splash-style-select').value = configRow.style || 'flowers';
+      document.getElementById('splash-repeat-input').value = configRow.repeat_seconds || 0;
     } else {
       document.getElementById('splash-duration-input').value = 8;
+      document.getElementById('splash-repeat-input').value = 0;
     }
 
     document.getElementById('save-settings-btn').addEventListener('click', async () => {
@@ -328,11 +347,13 @@
       const value = document.getElementById('splash-toggle').checked;
       const loop = document.getElementById('splash-loop-toggle').checked;
       const duration_seconds = parseInt(document.getElementById('splash-duration-input').value, 10) || 8;
+      const style = document.getElementById('splash-style-select').value;
+      const repeat_seconds = parseInt(document.getElementById('splash-repeat-input').value, 10) || 0;
 
       statusEl.textContent = 'Saving…';
       const [{ error: err1 }, { error: err2 }] = await Promise.all([
         sb.from('site_settings').update({ value }).eq('key', 'splash_enabled'),
-        sb.from('splash_config').update({ loop, duration_seconds }).eq('id', true)
+        sb.from('splash_config').update({ loop, duration_seconds, style, repeat_seconds }).eq('id', true)
       ]);
       statusEl.textContent = (err1 || err2) ? 'Error — not saved' : 'Saved ✓';
       if (!err1 && !err2) setTimeout(() => { statusEl.textContent = ''; }, 2500);
@@ -344,7 +365,8 @@
     const mapWrap = document.getElementById('world-map-wrap');
 
     if (error || !visits) {
-      mapWrap.innerHTML = '<p class="loading-note" style="padding:16px">Could not load visit data.</p>';
+      console.error('LivingIQ admin: could not load visits', error);
+      mapWrap.innerHTML = '<p class="loading-note" style="padding:16px">Could not load visit data' + (error ? ': ' + error.message : '') + '.</p>';
       return;
     }
 
@@ -353,8 +375,10 @@
     document.getElementById('stat-countries').textContent = countries.size;
 
     let visitDots = '';
+    let locatedCount = 0;
     visits.forEach(v => {
       if (v.lat == null || v.lng == null) return;
+      locatedCount++;
       const jitterX = (Math.random() - 0.5) * 4;
       const jitterY = (Math.random() - 0.5) * 4;
       const [x, y] = projectLatLng(v.lat, v.lng);
@@ -362,6 +386,10 @@
     });
 
     mapWrap.innerHTML = '<svg viewBox="0 0 1000 500" role="img" aria-label="World map of visitor locations">' + WORLD_DOTS_SVG + visitDots + '</svg>';
+
+    if (locatedCount === 0 && visits.length > 0) {
+      mapWrap.insertAdjacentHTML('afterend', '<p class="loading-note" style="margin-top:8px">' + visits.length + ' visit(s) logged, but none had location data yet (likely blocked by an ad-blocker during the geolocation lookup) — the map will populate once a visit succeeds.</p>');
+    }
   }
 </script>
 
