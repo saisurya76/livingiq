@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>LivingIQ — Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{
+    --bg:#0B1220; --surface:#121A2B; --line:#253048; --text:#E7ECF5; --muted:#8592AD;
+    --teal:#5EEAD4; --amber:#F5B841;
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  body{ background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; line-height:1.5; min-height:100vh; }
+  h1,h2{ font-family:'Space Grotesk',sans-serif; }
+  .mono{ font-family:'IBM Plex Mono',monospace; }
+  .wrap{ max-width:900px; margin:0 auto; padding:40px 24px 80px; }
+
+  .topbar{ display:flex; align-items:center; justify-content:space-between; margin-bottom:36px; }
+  .topbar h1{ font-size:1.3rem; display:flex; align-items:center; gap:8px; }
+  .topbar .dot{ width:8px; height:8px; border-radius:50%; background:var(--teal); box-shadow:0 0 12px var(--teal); }
+  .btn{
+    font-family:'Inter',sans-serif; font-size:0.85rem; font-weight:500; padding:8px 16px; border-radius:7px;
+    border:1px solid var(--line); background:transparent; color:var(--text); cursor:pointer; transition:border-color .15s ease;
+  }
+  .btn:hover{ border-color:var(--muted); }
+  .btn-primary{ background:var(--teal); color:#06231F; border-color:var(--teal); font-weight:600; }
+  .btn-primary:hover{ background:#83f0dd; }
+
+  /* Login screen */
+  .login-card{
+    max-width:360px; margin:12vh auto 0; background:var(--surface); border:1px solid var(--line);
+    border-radius:14px; padding:36px;
+  }
+  .login-card h2{ font-size:1.2rem; margin-bottom:6px; }
+  .login-card p{ color:var(--muted); font-size:0.85rem; margin-bottom:24px; }
+  .field{ margin-bottom:14px; }
+  .field label{ display:block; font-size:0.78rem; color:var(--muted); margin-bottom:6px; }
+  .field input{
+    width:100%; padding:10px 12px; border-radius:7px; border:1px solid var(--line);
+    background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; font-size:0.9rem;
+  }
+  .field input:focus{ outline:none; border-color:var(--teal); }
+  .login-error{ color:#F26B6B; font-size:0.8rem; margin-top:10px; min-height:1.2em; }
+
+  /* Card rows */
+  .section-label{
+    font-family:'IBM Plex Mono',monospace; font-size:0.72rem; text-transform:uppercase; letter-spacing:0.08em;
+    color:var(--muted); margin:28px 0 10px;
+  }
+  .section-label:first-child{ margin-top:0; }
+  .row{
+    background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:18px 20px;
+    margin-bottom:10px; display:grid; grid-template-columns:1fr auto; gap:14px; align-items:start;
+  }
+  .row-main{ display:flex; flex-direction:column; gap:10px; }
+  .row-top{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .row-name{ font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:1.02rem; }
+  .row-id{ font-family:'IBM Plex Mono',monospace; font-size:0.72rem; color:var(--muted); }
+  .status-pill{
+    font-family:'IBM Plex Mono',monospace; font-size:0.65rem; text-transform:uppercase; letter-spacing:0.05em;
+    padding:2px 8px; border-radius:20px; border:1px solid var(--line); color:var(--muted);
+  }
+  .status-pill.live{ color:#06231F; background:var(--teal); border-color:var(--teal); }
+
+  .toggle-row{ display:flex; align-items:center; gap:20px; flex-wrap:wrap; }
+  .switch-label{ display:flex; align-items:center; gap:8px; font-size:0.85rem; cursor:pointer; user-select:none; }
+  .switch{ position:relative; width:38px; height:22px; flex-shrink:0; }
+  .switch input{ opacity:0; width:0; height:0; }
+  .slider{
+    position:absolute; inset:0; background:var(--line); border-radius:20px; cursor:pointer; transition:.2s;
+  }
+  .slider::before{
+    content:''; position:absolute; width:16px; height:16px; left:3px; top:3px; background:var(--text);
+    border-radius:50%; transition:.2s;
+  }
+  .switch input:checked + .slider{ background:var(--teal); }
+  .switch input:checked + .slider::before{ transform:translateX(16px); background:#06231F; }
+
+  .msg-field{ margin-top:2px; }
+  .msg-field label{ display:block; font-size:0.72rem; color:var(--muted); margin-bottom:4px; }
+  .msg-field textarea{
+    width:100%; min-height:44px; padding:8px 10px; border-radius:7px; border:1px solid var(--line);
+    background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; font-size:0.85rem; resize:vertical;
+  }
+  .msg-field textarea:focus{ outline:none; border-color:var(--amber); }
+
+  .row-actions{ display:flex; flex-direction:column; align-items:flex-end; gap:6px; }
+  .save-status{ font-family:'IBM Plex Mono',monospace; font-size:0.7rem; color:var(--teal); min-height:1em; }
+
+  #app-panel{ display:none; }
+  .loading-note{ color:var(--muted); font-size:0.85rem; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div id="login-screen" class="login-card">
+    <h2>LivingIQ Admin</h2>
+    <p>Sign in to manage which apps are visible and live.</p>
+    <form id="login-form">
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" required autocomplete="username">
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" required autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%">Sign in</button>
+      <div class="login-error" id="login-error"></div>
+    </form>
+  </div>
+
+  <div id="app-panel">
+    <div class="topbar">
+      <h1><span class="dot"></span>LivingIQ Admin</h1>
+      <button class="btn" id="logout-btn">Sign out</button>
+    </div>
+    <div id="cards-container">
+      <p class="loading-note">Loading cards…</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const SUPABASE_URL = "https://ktccvtbxidpispbtvsfc.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt0Y2N2dGJ4aWRwaXNwYnR2c2ZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUyOTU3MDQsImV4cCI6MjEwMDg3MTcwNH0.Zs0LY5FruLBRl_dtVZb6JGipWbvGNUJud9m1lvIIqeg";
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  const loginScreen = document.getElementById('login-screen');
+  const appPanel = document.getElementById('app-panel');
+  const loginForm = document.getElementById('login-form');
+  const loginError = document.getElementById('login-error');
+  const cardsContainer = document.getElementById('cards-container');
+
+  const SECTION_LABELS = {
+    work: 'Work', assets: 'Assets', protect: 'Protect',
+    spending: 'Spending', self: 'Self', health: 'Health'
+  };
+
+  function showApp(){
+    loginScreen.style.display = 'none';
+    appPanel.style.display = 'block';
+    loadCards();
+  }
+  function showLogin(){
+    loginScreen.style.display = 'block';
+    appPanel.style.display = 'none';
+  }
+
+  // Check for an existing session on load
+  sb.auth.getSession().then(({ data }) => {
+    if (data.session) showApp(); else showLogin();
+  });
+
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    loginError.textContent = '';
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const { error } = await sb.auth.signInWithPassword({ email, password });
+    if (error) {
+      loginError.textContent = error.message;
+    } else {
+      showApp();
+    }
+  });
+
+  document.getElementById('logout-btn').addEventListener('click', async () => {
+    await sb.auth.signOut();
+    showLogin();
+  });
+
+  function escapeHTML(str){
+    const d = document.createElement('div');
+    d.textContent = str || '';
+    return d.innerHTML;
+  }
+
+  function rowHTML(card){
+    return `
+    <div class="row" data-id="${card.id}">
+      <div class="row-main">
+        <div class="row-top">
+          <span class="row-name">${escapeHTML(card.name)}</span>
+          <span class="row-id">${escapeHTML(card.id)}</span>
+          <span class="status-pill ${card.status === 'live' ? 'live' : ''}">${escapeHTML(card.status)}</span>
+        </div>
+        <div class="toggle-row">
+          <label class="switch-label">
+            <span class="switch"><input type="checkbox" class="enabled-toggle" ${card.enabled ? 'checked' : ''}><span class="slider"></span></span>
+            Enabled
+          </label>
+          <label class="switch-label">
+            <span class="switch"><input type="checkbox" class="beta-toggle" ${card.beta ? 'checked' : ''}><span class="slider"></span></span>
+            Beta badge
+          </label>
+        </div>
+        <div class="msg-field">
+          <label>Message shown to users when disabled</label>
+          <textarea class="disabled-msg-input">${escapeHTML(card.disabled_message)}</textarea>
+        </div>
+      </div>
+      <div class="row-actions">
+        <button class="btn btn-primary save-btn">Save</button>
+        <span class="save-status"></span>
+      </div>
+    </div>`;
+  }
+
+  async function loadCards(){
+    const { data: cards, error } = await sb.from('cards').select('*').order('section').order('sort_order');
+    if (error) {
+      cardsContainer.innerHTML = `<p class="loading-note">Could not load cards: ${escapeHTML(error.message)}</p>`;
+      return;
+    }
+
+    const bySection = {};
+    cards.forEach(c => { (bySection[c.section] = bySection[c.section] || []).push(c); });
+
+    let html = '';
+    Object.keys(SECTION_LABELS).forEach(section => {
+      if (!bySection[section]) return;
+      html += `<div class="section-label">${SECTION_LABELS[section]}</div>`;
+      bySection[section].forEach(card => { html += rowHTML(card); });
+    });
+    cardsContainer.innerHTML = html;
+
+    cardsContainer.querySelectorAll('.row').forEach(row => {
+      const id = row.dataset.id;
+      row.querySelector('.save-btn').addEventListener('click', async () => {
+        const statusEl = row.querySelector('.save-status');
+        const enabled = row.querySelector('.enabled-toggle').checked;
+        const beta = row.querySelector('.beta-toggle').checked;
+        const disabled_message = row.querySelector('.disabled-msg-input').value;
+
+        statusEl.textContent = 'Saving…';
+        const { error } = await sb.from('cards').update({ enabled, beta, disabled_message }).eq('id', id);
+        statusEl.textContent = error ? 'Error — not saved' : 'Saved ✓';
+        if (!error) setTimeout(() => { statusEl.textContent = ''; }, 2500);
+      });
+    });
+  }
+</script>
+
+</body>
+</html>
