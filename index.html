@@ -213,19 +213,22 @@
   #mascot-strip .mascot-node:hover{ transform:scale(1.08) translateY(-3px); }
   #mascot-strip text[data-target]:hover{ fill:var(--teal); }
 
-  /* Arrival celebration splash */
-  #splash-layer{ position:fixed; inset:0; pointer-events:none; z-index:9999; overflow:hidden; }
-  .confetto{
-    position:absolute; top:-24px; left:var(--x);
-    width:var(--size); height:var(--size); background:var(--clr);
-    opacity:0.95; animation:confettiFall var(--dur) ease-in forwards; animation-delay:var(--delay);
+  /* Celebration splash overlay */
+  #celebration-layer{
+    position:fixed; inset:0; z-index:9999; pointer-events:none; overflow:hidden;
   }
-  @keyframes confettiFall{
-    0%   { transform:translateY(0) rotate(0deg); opacity:1; }
-    85%  { opacity:1; }
-    100% { transform:translateY(112vh) rotate(var(--rot)); opacity:0; }
+  .celebration-piece{
+    position:absolute; top:-40px; font-size:1.6rem; opacity:0;
+    animation-name:celebrationFall; animation-timing-function:ease-in; animation-fill-mode:forwards;
   }
-  @media (prefers-reduced-motion: reduce){ #splash-layer{ display:none; } }
+  @keyframes celebrationFall{
+    0%   { opacity:0; transform:translateY(0) rotate(0deg); }
+    8%   { opacity:1; }
+    100% { opacity:0; transform:translateY(105vh) rotate(360deg); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    #celebration-layer{ display:none; }
+  }
 </style>
 </head>
 <body>
@@ -559,62 +562,71 @@
     });
   }
   renderCards();
-</script>
 
-<script>
-  // ---- Visit logging (best-effort, silent on failure) ----
-  (async function logVisit(){
-    try {
-      const res = await fetch('https://ipwho.is/');
-      const geo = await res.json();
-      if (!geo || geo.success === false) return;
-      await sb.from('visits').insert({
-        country: geo.country || null,
-        country_code: geo.country_code || null,
-        city: geo.city || null,
-        lat: geo.latitude || null,
-        lng: geo.longitude || null
-      });
-    } catch (e) {
-      // ad-blockers or offline — fine to skip silently
-    }
-  })();
-
-  // ---- Arrival celebration splash, toggled from admin ----
-  const CONFETTI_COLORS = ['#5EEAD4', '#F5B841', '#EE8266', '#B49CE0', '#F2A9C4', '#8FC98A'];
-
-  function launchConfetti(){
+  // ---- Celebration splash — admin-toggleable, loop + duration configurable ----
+  function runCelebration(durationSeconds, loop){
     const layer = document.createElement('div');
-    layer.id = 'splash-layer';
-    const count = 46;
-    for (let n = 0; n < count; n++){
-      const el = document.createElement('div');
-      el.className = 'confetto';
-      const size = 6 + Math.random() * 8;
-      el.style.setProperty('--x', (Math.random() * 100) + 'vw');
-      el.style.setProperty('--size', size + 'px');
-      el.style.setProperty('--clr', CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)]);
-      el.style.setProperty('--dur', (3 + Math.random() * 2.2) + 's');
-      el.style.setProperty('--delay', (Math.random() * 1.2) + 's');
-      el.style.setProperty('--rot', (Math.random() > 0.5 ? 1 : -1) * (240 + Math.random() * 300) + 'deg');
-      el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
-      layer.appendChild(el);
-    }
+    layer.id = 'celebration-layer';
     document.body.appendChild(layer);
-    setTimeout(() => layer.remove(), 7000);
+
+    const pieces = ['🌸','✨','🎉','🌟','🎊'];
+
+    function burst(){
+      const count = 22;
+      for (let n = 0; n < count; n++){
+        const el = document.createElement('span');
+        el.className = 'celebration-piece';
+        el.textContent = pieces[Math.floor(Math.random() * pieces.length)];
+        el.style.left = Math.random() * 100 + 'vw';
+        el.style.animationDuration = (3.2 + Math.random() * 2.2) + 's';
+        el.style.animationDelay = (Math.random() * 0.6) + 's';
+        el.style.fontSize = (1.1 + Math.random() * 1.4) + 'rem';
+        layer.appendChild(el);
+      }
+    }
+
+    burst();
+    let bursts = null;
+    if (loop) {
+      bursts = setInterval(burst, 1500);
+    }
+    setTimeout(() => {
+      if (bursts) clearInterval(bursts);
+      layer.remove();
+    }, Math.max(durationSeconds, 1) * 1000 + 1500);
   }
 
-  (async function maybeShowSplash(){
+  async function maybeRunCelebration(){
+    const [{ data: enabledRow }, { data: configRow }] = await Promise.all([
+      sb.from('site_settings').select('value').eq('key', 'splash_enabled').single(),
+      sb.from('splash_config').select('loop, duration_seconds').eq('id', true).single()
+    ]);
+    if (!enabledRow || !enabledRow.value) return;
+    const loop = configRow ? configRow.loop : true;
+    const duration = configRow ? configRow.duration_seconds : 8;
+    setTimeout(() => runCelebration(duration, loop), 2000);
+  }
+  maybeRunCelebration();
+
+  // ---- Visit logging for the admin dashboard (best-effort, never blocks the page) ----
+  async function logVisit(){
+    let geo = {};
     try {
-      const { data, error } = await sb.from('site_settings').select('value').eq('key', 'splash_enabled').single();
-      if (error || !data || !data.value) return;
-      window.addEventListener('load', () => {
-        setTimeout(launchConfetti, 2000);
-      });
+      const res = await fetch('https://ipwho.is/');
+      const j = await res.json();
+      if (j && j.success !== false) {
+        geo = { country: j.country || null, country_code: j.country_code || null, city: j.city || null, lat: j.latitude || null, lng: j.longitude || null };
+      }
     } catch (e) {
-      // settings unreachable — skip quietly, no splash
+      // geo lookup failed — still record the visit below, just without location
     }
-  })();
+    try {
+      await sb.from('visits').insert(geo);
+    } catch (e) {
+      // visit logging is best-effort; never surface this to the user
+    }
+  }
+  logVisit();
 </script>
 
 <script>

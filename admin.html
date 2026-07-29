@@ -146,7 +146,16 @@
       <div class="settings-row">
         <label class="switch-label">
           <span class="switch"><input type="checkbox" id="splash-toggle"><span class="slider"></span></span>
-          Arrival celebration splash (confetti, 2s after page load)
+          Arrival celebration splash (2s after page load)
+        </label>
+        <label class="switch-label">
+          <span class="switch"><input type="checkbox" id="splash-loop-toggle"><span class="slider"></span></span>
+          Loop bursts
+        </label>
+        <label class="switch-label" style="gap:6px">
+          Duration
+          <input type="number" id="splash-duration-input" min="1" max="60" style="width:64px; padding:6px 8px; border-radius:6px; border:1px solid var(--line); background:var(--bg); color:var(--text); font-family:'Inter',sans-serif;">
+          sec
         </label>
         <button class="btn btn-primary" id="save-settings-btn">Save</button>
         <span class="save-status" id="settings-save-status"></span>
@@ -302,17 +311,31 @@
   }
 
   async function loadSettings(){
-    const { data, error } = await sb.from('site_settings').select('value').eq('key', 'splash_enabled').single();
-    if (!error && data) {
-      document.getElementById('splash-toggle').checked = !!data.value;
+    const [{ data: enabledRow }, { data: configRow }] = await Promise.all([
+      sb.from('site_settings').select('value').eq('key', 'splash_enabled').single(),
+      sb.from('splash_config').select('loop, duration_seconds').eq('id', true).single()
+    ]);
+    if (enabledRow) document.getElementById('splash-toggle').checked = !!enabledRow.value;
+    if (configRow) {
+      document.getElementById('splash-loop-toggle').checked = !!configRow.loop;
+      document.getElementById('splash-duration-input').value = configRow.duration_seconds;
+    } else {
+      document.getElementById('splash-duration-input').value = 8;
     }
+
     document.getElementById('save-settings-btn').addEventListener('click', async () => {
       const statusEl = document.getElementById('settings-save-status');
       const value = document.getElementById('splash-toggle').checked;
+      const loop = document.getElementById('splash-loop-toggle').checked;
+      const duration_seconds = parseInt(document.getElementById('splash-duration-input').value, 10) || 8;
+
       statusEl.textContent = 'Saving…';
-      const { error } = await sb.from('site_settings').update({ value }).eq('key', 'splash_enabled');
-      statusEl.textContent = error ? 'Error — not saved' : 'Saved ✓';
-      if (!error) setTimeout(() => { statusEl.textContent = ''; }, 2500);
+      const [{ error: err1 }, { error: err2 }] = await Promise.all([
+        sb.from('site_settings').update({ value }).eq('key', 'splash_enabled'),
+        sb.from('splash_config').update({ loop, duration_seconds }).eq('id', true)
+      ]);
+      statusEl.textContent = (err1 || err2) ? 'Error — not saved' : 'Saved ✓';
+      if (!err1 && !err2) setTimeout(() => { statusEl.textContent = ''; }, 2500);
     });
   }
 
